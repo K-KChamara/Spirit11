@@ -1,104 +1,30 @@
-"use client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/homePage";
+import MainLayout from "./layouts/MainLayout";
+import PlayersPage from "./pages/playersPage";
+import PlayerStatsPage from "./pages/pagePlayerStats";
+import TournamentSummaryPage from "./pages/pageTournements";
+import LeaderboardPage from "./pages/pageLeaderBoard";
+import TeamBuilder from "./pages/pageTeamBuilder";
 
-import { Button } from "@/components/ui/button";
-
-import { Suspense, useState } from "react";
-import { Loader2 } from "lucide-react";
-import { Toaster } from "sonner";
-import DashboardTabs from "@/components/dashboard-tabs";
-import FeatureShowcase from "@/components/feature-showcase";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { UserNav } from "@/components/user-nav";
-import { CreateTeamModal } from "@/components/create-team-modal";
-import { SiteFooter } from "./components/site-footer.jsx";
-import { HeroShowcase } from "./components/hero-showcase.jsx";
-import Chatbot from "./components/chat-bot.jsx";
-
-export default function Home() {
-  // Shared state for active tab
-  const [activeTab, setActiveTab] = useState("players");
-
+function App() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-screen-xl mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <img
-              src="/src/assets/logo-img.png?height=32&width=32"
-              alt="Spirit11 Logo"
-              className="h-8"
-            />
-            <h1 className="text-xl font-bold text-primary">Spirit11</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <CreateTeamModal />
-            <UserNav />
-          </div>
-        </div>
-      </header>
+    <Router>
+      
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/players" element={<PlayersPage/>} />
+          <Route path="/player-stats" element={<PlayerStatsPage/>} />
+          <Route path="/tournament-summary" element={<TournamentSummaryPage/>} />
+          <Route path="/leaderboard" element={<LeaderboardPage/>} />
+          <Route path="/team-builder" element={<TeamBuilder/>} />
 
-      {/* Hero Section */}
-      <section className="w-full max-w-screen-xl mx-auto py-8 md:py-12 px-4 relative">
-        <div className="relative">
-          <div className="overflow-hidden rounded-xl border bg-gradient-to-r from-green-500/20 via-blue-500/20 to-yellow-500/20 p-6 md:p-10">
-            <div className="grid gap-6 md:grid-cols-2 relative">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                  Build Your Dream Cricket Team
-                </h2>
-                <p className="text-muted-foreground md:text-lg">
-                  Select players, stay within budget, and compete with friends.
-                  Our AI assistant helps you make the best choices.
-                </p>
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button size="lg" onClick={() => setActiveTab("players")}>
-                    Get Started
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={() => setActiveTab("leaderboard")}
-                  >
-                    View Leaderboard
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Cricket Player Image - Positioned Outside the Bordered Container */}
-          <div className="absolute right-[-50px] top-[-30px] md:right-[-80px] md:top-[-50px] lg:right-[40px] lg:top-[-70px] z-10">
-            <img
-              src="/src/assets/cricket-player.png?height=500&width=500"
-              alt="Cricket Player Illustration"
-              className="h-80 w-80 md:h-[350px] md:w-[350px]"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <main className="max-w-screen-xl mx-auto px-4 pb-16">
-        <Suspense
-          fallback={
-            <div className="flex h-40 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          }
-        >
-          {/* <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} /> */}
-          <Chatbot />
-          <FeatureShowcase />
-          <HeroShowcase />
-        </Suspense>
-
-        <SiteFooter className="m-0 w-fit" />
-      </main>
-
-      {/* Sonner Toaster */}
-      <Toaster position="top-right" richColors closeButton />
-    </div>
+          
+        </Route>
+      </Routes>
+    </Router>
   );
 }
+
+export default App;

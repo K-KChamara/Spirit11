@@ -1,14 +1,15 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "@/components/NavBar"; // Ensure the correct path
+import { CricketSidebar } from "@/components/cricket-sidebar";
 
 const MainLayout = () => {
   return (
     <div>
-      <Navbar />
-      <main className="mt-16 px-10">
-        <Outlet /> {/* This renders the current route's component */}
-      </main>
+       <CricketSidebar children={<Outlet/>}/>
+    
+      {/* This renders the current route's component */}
+     
     </div>
   );
 };

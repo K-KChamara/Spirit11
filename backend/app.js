@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors'; // Importing CORS
 import dbConnect from './DataBase/db.js';
 import dotenv from 'dotenv';
+import PlayerRouter from './Routes/playerRoutes.js';
+import { teamRouter } from './Routes/teamRoutes.js';
 const app = express();
 // Load environment variables
 dotenv.config();
@@ -25,7 +27,8 @@ app.post('/api/data', (req, res) => {
   const data = req.body;
   res.status(201).json({ message: 'Data received', data });
 });
-
+app.use('/api/player', PlayerRouter);
+app.use('/api/team' ,teamRouter)
 // Add more routes as needed
 // app.get('/example', (req, res) => { ... });
 
