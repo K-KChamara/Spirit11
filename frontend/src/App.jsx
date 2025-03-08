@@ -8,18 +8,19 @@ import LeaderboardPage from "./pages/pageLeaderBoard";
 import TeamBuilder from "./pages/pageTeamBuilder";
 import LiveStreamPage from "./pages/pageStream";
 import PageSignIn from "./pages/pageSignIn";
+import { ClerkProvider } from "@clerk/clerk-react";
+import SignUpPage from "./pages/signUp";
 
 function App() {
   const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
   return (
-    
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/sign-in">
       <Router>
         <Routes>
-
           <Route element={<MainLayout />}>
-          <Route path="/sign-in" element={<PageSignIn />} />
+            <Route path="/sign-in" element={<PageSignIn />} />
 
-          {/* <Route path="/sign-up" element={<SignUp />} /> */}
+            <Route path="/sign-up" element={<SignUpPage />} />
 
             <Route path="/" element={<Home />} />
             <Route path="/players" element={<PlayersPage />} />
@@ -34,7 +35,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    
+    </ClerkProvider>
   );
 }
 
