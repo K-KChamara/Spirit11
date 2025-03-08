@@ -1,12 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Navbar from "@/components/NavBar"; // Ensure the correct path
-import { CricketSidebar } from "@/components/cricket-sidebar";
+import CricketNavigation from "@/components/cricket-navigation";
 
 const MainLayout = () => {
   return (
     <div>
-       <CricketSidebar children={<Outlet/>}/>
+  
+      <CricketNavigation children={<Outlet/>} />
+      
     
       {/* This renders the current route's component */}
      
