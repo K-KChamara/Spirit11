@@ -26,7 +26,8 @@ export function HeroShowcase() {
   const [topBatsmen, setTopBatsmen] = useState([]);
   const [topBowlers, setTopBowlers] = useState([]);
   const [topAllRounders, setTopAllRounders] = useState([]);
-
+  const [topTeams, setTopTeams] = useState([]);
+  const [teams, setTeams] = useState([]);
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
@@ -62,11 +63,26 @@ export function HeroShowcase() {
     };
 
     fetchPlayers();
-  }, []);
 
-  console.log("Top Batsmen:", topBatsmen);
-  console.log("Top Bowlers:", topBowlers);
-  console.log("Top All-rounders:", topAllRounders);
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/team");
+        const teams = response.data;
+        console.log("team1", teams[0]);
+        // Categorize Teams
+        console.log("teams", teams);
+        const topTeams = [...teams] // Create a copy to avoid mutating the original array
+          .sort((a, b) => (b.totalValue ?? 0) - (a.totalValue ?? 0))
+          .slice(0, 5);
+        setTeams(teams);
+        setTopTeams(topTeams);
+        console.log("topteam:", topTeams);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+    fetchTeams();
+  }, []);
 
   return (
     <section className="py-10">
@@ -80,7 +96,7 @@ export function HeroShowcase() {
       </div>
 
       <Tabs defaultValue="teams" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
+        <TabsList className="grid w-full grid-cols-2 mb-8">
           <TabsTrigger value="teams">
             <Trophy className="mr-2 h-4 w-4" />
             Top Teams
@@ -89,208 +105,154 @@ export function HeroShowcase() {
             <Users className="mr-2 h-4 w-4" />
             Star Players
           </TabsTrigger>
-          <TabsTrigger value="tournaments">
-            <Calendar className="mr-2 h-4 w-4" />
-            Tournaments
-          </TabsTrigger>
+        
+            
         </TabsList>
 
         {/* Top Teams Tab */}
         <TabsContent value="teams" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Featured Team */}
-            <Card className="md:col-span-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 border-amber-200 dark:border-amber-800">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <Badge className="bg-amber-500 hover:bg-amber-600">
-                    <Crown className="mr-1 h-3 w-3" /> #1 Ranked
-                  </Badge>
-                  <Trophy className="h-6 w-6 text-amber-500" />
-                </div>
-                <CardTitle className="mt-2">Mumbai Indians</CardTitle>
-                <CardDescription>5-time IPL Champions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <Avatar className="h-12 w-12 border-2 border-amber-200 dark:border-amber-800">
-                      <AvatarImage
-                        src="/placeholder.svg?height=48&width=48"
-                        alt="Mumbai Indians"
-                      />
-                      <AvatarFallback>MI</AvatarFallback>
-                    </Avatar>
-                    <div className="ml-4">
-                      <div className="font-medium">Recent Form</div>
-                      <div className="text-sm text-muted-foreground">
-                        W W L W W
-                      </div>
+            {/* Render top 3 teams */}
+            {topTeams.slice(0, 3).map((team, i) => (
+              <>
+                <Card
+                  key={i}
+                  className="md:col-span-1 bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 border-amber-200 dark:border-amber-800"
+                >
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <Badge className="bg-amber-500 hover:bg-amber-600">
+                        <Crown className="mr-1 h-3 w-3" /> #{i + 1} Ranked
+                      </Badge>
+                      <Trophy className="h-6 w-6 text-amber-500" />
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold">86%</div>
-                    <div className="text-xs text-muted-foreground">
-                      Win Rate
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-center text-sm">
-                  <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">18</div>
-                    <div className="text-xs text-muted-foreground">Matches</div>
-                  </div>
-                  <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">14</div>
-                    <div className="text-xs text-muted-foreground">Wins</div>
-                  </div>
-                  <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">+1.23</div>
-                    <div className="text-xs text-muted-foreground">NRR</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                    <CardTitle className="mt-2">{team.teamName}</CardTitle>
+                    <CardDescription>5-time League Champions</CardDescription>
+                  </CardHeader>
 
-            {/* Team Rankings */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Team Rankings</CardTitle>
-                <CardDescription>
-                  Based on recent performance and tournament standings
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[220px] pr-4">
-                  <div className="space-y-2">
-                    {[
-                      {
-                        name: "Mumbai Indians",
-                        rank: 1,
-                        points: 28,
-                        nrr: "+1.23",
-                        form: "W W L W W",
-                      },
-                      {
-                        name: "Chennai Super Kings",
-                        rank: 2,
-                        points: 26,
-                        nrr: "+0.98",
-                        form: "W W W L W",
-                      },
-                      {
-                        name: "Royal Challengers Bangalore",
-                        rank: 3,
-                        points: 24,
-                        nrr: "+0.76",
-                        form: "L W W W L",
-                      },
-                      {
-                        name: "Delhi Capitals",
-                        rank: 4,
-                        points: 22,
-                        nrr: "+0.45",
-                        form: "W L W W W",
-                      },
-                      {
-                        name: "Kolkata Knight Riders",
-                        rank: 5,
-                        points: 20,
-                        nrr: "+0.32",
-                        form: "L W L W W",
-                      },
-                      {
-                        name: "Rajasthan Royals",
-                        rank: 6,
-                        points: 18,
-                        nrr: "-0.12",
-                        form: "L L W W L",
-                      },
-                      {
-                        name: "Punjab Kings",
-                        rank: 7,
-                        points: 16,
-                        nrr: "-0.34",
-                        form: "W L L W L",
-                      },
-                      {
-                        name: "Sunrisers Hyderabad",
-                        rank: 8,
-                        points: 14,
-                        nrr: "-0.58",
-                        form: "L L W L W",
-                      },
-                      {
-                        name: "Gujarat Titans",
-                        rank: 9,
-                        points: 12,
-                        nrr: "-0.87",
-                        form: "L W L L L",
-                      },
-                      {
-                        name: "Lucknow Super Giants",
-                        rank: 10,
-                        points: 10,
-                        nrr: "-1.23",
-                        form: "L L L W L",
-                      },
-                    ].map((team, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center p-2 rounded-md hover:bg-muted"
-                      >
-                        <div className="w-8 text-center font-bold">
-                          {team.rank}
-                        </div>
-                        <Avatar className="h-8 w-8 mx-2">
+                  <CardContent>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center">
+                        <Avatar className="h-12 w-12 border-2 border-amber-200 dark:border-amber-800">
                           <AvatarImage
-                            src={`/placeholder.svg?height=32&width=32`}
-                            alt={team.name}
+                            src="/placeholder.svg?height=48&width=48"
+                            alt={team.teamName}
                           />
-                          <AvatarFallback>
-                            {team.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
+                          <AvatarFallback>{team.teamName[0]}</AvatarFallback>
                         </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium truncate">
-                            {team.name}
+                        <div className="ml-4">
+                          <div className="font-medium">Recent Form</div>
+                          <div className="text-sm text-muted-foreground">
+                            W W L W W
                           </div>
-                        </div>
-                        <div className="text-center w-12">
-                          <div className="font-medium">{team.points}</div>
-                          <div className="text-xs text-muted-foreground">
-                            pts
-                          </div>
-                        </div>
-                        <div className="text-center w-12">
-                          <div className="font-medium">{team.nrr}</div>
-                          <div className="text-xs text-muted-foreground">
-                            NRR
-                          </div>
-                        </div>
-                        <div className="ml-2 text-xs tracking-wider">
-                          {team.form.split(" ").map((result, j) => (
-                            <span
-                              key={j}
-                              className={`inline-block w-5 h-5 rounded-full text-center leading-5 mx-0.5 
-                                ${
-                                  result === "W"
-                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                    : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                                }`}
-                            >
-                              {result}
-                            </span>
-                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold">86%</div>
+                        <div className="text-xs text-muted-foreground">
+                          Win Rate
+                        </div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                      <div className="bg-background rounded-md p-2">
+                        <div className="font-medium">18</div>
+                        <div className="text-xs text-muted-foreground">
+                          Matches
+                        </div>
+                      </div>
+                      <div className="bg-background rounded-md p-2">
+                        <div className="font-medium">14</div>
+                        <div className="text-xs text-muted-foreground">
+                          Wins
+                        </div>
+                      </div>
+                      <div className="bg-background rounded-md p-2">
+                        <div className="font-medium">+1.23</div>
+                        <div className="text-xs text-muted-foreground">NRR</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="md:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Team Rankings</CardTitle>
+                    <CardDescription>
+                      Based on recent performance and tournament standings
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ScrollArea className="h-[220px] pr-4">
+                      <div className="space-y-2">
+                        {topTeams.map((team, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center p-2 rounded-md hover:bg-muted"
+                          >
+                            <div className="w-8 text-center font-bold">
+                              {team.rank}
+                            </div>
+                            <Avatar className="h-10 w-10 mx-2">
+                              <AvatarImage
+                                src={/placeholder.svg?height=32&width=32/}
+                                alt={team.name}
+                              />
+                              <AvatarFallback>
+                                {team.teamName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium truncate">
+                                {team.teamName}
+                              </div>
+                            </div>
+                            <div>
+                              <Badge className="bg-amber-500 hover:bg-amber-600">
+                                <Crown className="mr-1 h-3 w-3" /> #{i + 1}{" "}
+                                Ranked
+                              </Badge>
+                            </div>
+                            <div className="text-center w-12 ml-6 mr-6">
+                              <div className="font-medium">
+                                {team.totalValue.toFixed(2)}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                pts
+                              </div>
+                            </div>
+                            <div className="text-center w-12 mr-6">
+                              <div className="font-medium">{team.price}</div>
+                              <div className="text-xs text-muted-foreground">
+                                price
+                              </div>
+                            </div>
+
+                            {/* <div className="ml-2 text-xs tracking-wider">
+              {team.form.split(" ").map((result, j) => (
+                <span
+                  key={j}
+                  className={`inline-block w-5 h-5 rounded-full text-center leading-5 mx-0.5
+                    ${
+                      result === "W"
+                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                        : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                    }`}
+                >
+                  {result}
+                </span>
+              ))}
+            </div> */}
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </>
+            ))}
           </div>
         </TabsContent>
 
@@ -306,8 +268,8 @@ export function HeroShowcase() {
                   </Badge>
                   <Award className="h-6 w-6 text-blue-500" />
                 </div>
-                <CardTitle className="mt-2">Virat Kohli</CardTitle>
-                <CardDescription>Royal Challengers Bangalore</CardDescription>
+                <CardTitle className="mt-2">{topAllRounders[0].name}</CardTitle>
+                <CardDescription>{topAllRounders[0].university}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-4">
@@ -316,10 +278,10 @@ export function HeroShowcase() {
                       src="/placeholder.svg?height=64&width=64"
                       alt="Virat Kohli"
                     />
-                    <AvatarFallback>VK</AvatarFallback>
+                    <AvatarFallback>DJ</AvatarFallback>
                   </Avatar>
                   <div className="text-right">
-                    <div className="text-2xl font-bold">732</div>
+                    <div className="text-2xl font-bold">{topAllRounders[0].totalRuns}</div>
                     <div className="text-xs text-muted-foreground">
                       Season Runs
                     </div>
@@ -327,19 +289,19 @@ export function HeroShowcase() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center text-sm">
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">56.3</div>
-                    <div className="text-xs text-muted-foreground">Average</div>
+                    <div className="font-medium">{topAllRounders[0].economyRate.toFixed(2)}</div>
+                    <div className="text-xs text-muted-foreground">Economy Rate</div>
                   </div>
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">152.4</div>
+                    <div className="font-medium">{topAllRounders[0].battingStrikeRate.toFixed(2)}</div>
                     <div className="text-xs text-muted-foreground">
                       Strike Rate
                     </div>
                   </div>
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">8</div>
+                    <div className="font-medium">{topAllRounders[0].points.toFixed(2)}</div>
                     <div className="text-xs text-muted-foreground">
-                      50s/100s
+                      Points
                     </div>
                   </div>
                 </div>
@@ -394,19 +356,25 @@ export function HeroShowcase() {
                               </div>
                             </div>
                             <div className="text-center w-16">
-                              <div className="font-medium">{player.totalRuns}</div>
+                              <div className="font-medium">
+                                {player.totalRuns}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 runs
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.battingAverage.toFixed(2)}</div>
+                              <div className="font-medium">
+                                {player.battingAverage.toFixed(2)}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 avg
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.battingStrikeRate.toFixed(2)}</div>
+                              <div className="font-medium">
+                                {player.battingStrikeRate.toFixed(2)}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 SR
                               </div>
@@ -465,7 +433,9 @@ export function HeroShowcase() {
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.bowlingStrikeRate.toFixed(2)}</div>
+                              <div className="font-medium">
+                                {player.bowlingStrikeRate.toFixed(2)}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 SR
                               </div>
@@ -508,7 +478,9 @@ export function HeroShowcase() {
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.totalRuns}</div>
+                              <div className="font-medium">
+                                {player.totalRuns}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 runs
                               </div>
@@ -522,7 +494,9 @@ export function HeroShowcase() {
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.points.toFixed(2)}</div>
+                              <div className="font-medium">
+                                {player.points.toFixed(2)}
+                              </div>
                               <div className="text-xs text-muted-foreground">
                                 pts
                               </div>
@@ -539,190 +513,6 @@ export function HeroShowcase() {
         </TabsContent>
 
         {/* Tournaments Tab */}
-        <TabsContent value="tournaments" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Current Tournament */}
-            <Card className="md:col-span-1 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <Badge className="bg-purple-500 hover:bg-purple-600">
-                    <TrendingUp className="mr-1 h-3 w-3" /> Live
-                  </Badge>
-                  <Calendar className="h-6 w-6 text-purple-500" />
-                </div>
-                <CardTitle className="mt-2">IPL 2023</CardTitle>
-                <CardDescription>Season 16 - Playoffs Stage</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <Avatar className="h-12 w-12 border-2 border-purple-200 dark:border-purple-800">
-                      <AvatarImage
-                        src="/placeholder.svg?height=48&width=48"
-                        alt="IPL Trophy"
-                      />
-                      <AvatarFallback>IPL</AvatarFallback>
-                    </Avatar>
-                    <div className="ml-4">
-                      <div className="font-medium">Next Match</div>
-                      <div className="text-sm text-muted-foreground">
-                        MI vs CSK
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-bold">Today</div>
-                    <div className="text-xs text-muted-foreground">7:30 PM</div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-2 text-center text-sm">
-                  <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">Qualifier 1</div>
-                    <div className="text-xs text-muted-foreground">
-                      Mumbai Indians vs Chennai Super Kings
-                    </div>
-                  </div>
-                  <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">Eliminator</div>
-                    <div className="text-xs text-muted-foreground">
-                      RCB vs Delhi Capitals
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Matches */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Recent Matches</CardTitle>
-                <CardDescription>
-                  Latest results from ongoing tournaments
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[220px] pr-4">
-                  <div className="space-y-4">
-                    {[
-                      {
-                        tournament: "IPL 2023",
-                        match: "Match 56",
-                        team1: "Mumbai Indians",
-                        team1Score: "213/3",
-                        team2: "Sunrisers Hyderabad",
-                        team2Score: "198/7",
-                        result: "Mumbai Indians won by 15 runs",
-                        date: "May 21, 2023",
-                      },
-                      {
-                        tournament: "IPL 2023",
-                        match: "Match 55",
-                        team1: "Chennai Super Kings",
-                        team1Score: "178/7",
-                        team2: "Kolkata Knight Riders",
-                        team2Score: "180/4",
-                        result: "Kolkata Knight Riders won by 6 wickets",
-                        date: "May 20, 2023",
-                      },
-                      {
-                        tournament: "IPL 2023",
-                        match: "Match 54",
-                        team1: "Royal Challengers Bangalore",
-                        team1Score: "197/5",
-                        team2: "Gujarat Titans",
-                        team2Score: "188/9",
-                        result: "Royal Challengers Bangalore won by 9 runs",
-                        date: "May 19, 2023",
-                      },
-                      {
-                        tournament: "IPL 2023",
-                        match: "Match 53",
-                        team1: "Delhi Capitals",
-                        team1Score: "187/3",
-                        team2: "Punjab Kings",
-                        team2Score: "183/8",
-                        result: "Delhi Capitals won by 4 runs",
-                        date: "May 18, 2023",
-                      },
-                      {
-                        tournament: "IPL 2023",
-                        match: "Match 52",
-                        team1: "Rajasthan Royals",
-                        team1Score: "202/5",
-                        team2: "Lucknow Super Giants",
-                        team2Score: "205/3",
-                        result: "Lucknow Super Giants won by 7 wickets",
-                        date: "May 17, 2023",
-                      },
-                    ].map((match, i) => (
-                      <Card key={i} className="p-3">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <Badge variant="outline" className="text-xs">
-                              {match.tournament}
-                            </Badge>
-                            <span className="text-xs text-muted-foreground ml-2">
-                              {match.match}
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {match.date}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-5 items-center">
-                          <div className="col-span-2 flex items-center">
-                            <Avatar className="h-6 w-6 mr-2">
-                              <AvatarImage
-                                src={`/placeholder.svg?height=24&width=24`}
-                                alt={match.team1}
-                              />
-                              <AvatarFallback>
-                                {match.team1
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="text-sm font-medium truncate">
-                              {match.team1}
-                            </div>
-                          </div>
-                          <div className="col-span-1 text-center">
-                            <div className="text-sm font-bold">
-                              {match.team1Score}{" "}
-                              <span className="text-muted-foreground">vs</span>{" "}
-                              {match.team2Score}
-                            </div>
-                          </div>
-                          <div className="col-span-2 flex items-center justify-end">
-                            <div className="text-sm font-medium text-right truncate">
-                              {match.team2}
-                            </div>
-                            <Avatar className="h-6 w-6 ml-2">
-                              <AvatarImage
-                                src={`/placeholder.svg?height=24&width=24`}
-                                alt={match.team2}
-                              />
-                              <AvatarFallback>
-                                {match.team2
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                          </div>
-                        </div>
-                        <div className="mt-2 text-xs text-center text-muted-foreground">
-                          {match.result}
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
       </Tabs>
     </section>
   );

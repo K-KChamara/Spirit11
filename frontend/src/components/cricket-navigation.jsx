@@ -14,23 +14,19 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "./theme-toggle";
-import Navbar from "./NavBar";
+import { ModeToggle } from "./mode-toggle";
 
 const navigationItems = [
   { name: "Dashboard", path: "/", icon: Home },
   { name: "Players", path: "/players", icon: Users },
-  { name: "Player Stats", path: "/player-stats", icon: BarChart2, adminOnly: true },
+  {
+    name: "Player Stats",
+    path: "/player-stats",
+    icon: BarChart2,
+    adminOnly: true,
+  },
   { name: "Tournament", path: "/tournament-summary", icon: Trophy },
   { name: "Live Stream", path: "/live-stream", icon: RadioIcon },
   { name: "Leaderboard", path: "/leaderboard", icon: Award },
@@ -38,9 +34,19 @@ const navigationItems = [
 ];
 
 export default function CricketNavigation({ children }) {
+  const { isSignedIn, user } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isMobile, setIsMobile] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is admin based on metadata
+    if (user && user.publicMetadata?.role === "admin") {
+      setIsAdmin(true);
+    }
+  }, [user]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -50,7 +56,11 @@ export default function CricketNavigation({ children }) {
   }, []);
 
   const currentPath = location.pathname;
-  const pathSegments = currentPath.split("/").filter(Boolean);
+
+  // Filter navigation items based on admin status
+  const filteredNavigationItems = navigationItems.filter(
+    (item) => !item.adminOnly || isAdmin
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 z-50">
@@ -98,28 +108,12 @@ export default function CricketNavigation({ children }) {
                 </SignedIn>
               </SheetContent>
             </Sheet>
-
-            
-    
-            <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="max-w-screen-xl mx-auto flex h-16 items-center justify-between px-4">
-                <div className="flex items-center gap-2">
-                  <img
-                    src="/src/assets/logo-img.png?height=32&width=32"
-                    alt="Spirit11 Logo"
-                    className="h-8"
-                  />
-                  <h1 className="text-xl font-bold text-primary">Spirit11</h1>
-                </div>
-                <div className="flex items-center gap-4">
-                  {/* <UserNav /> */}
-                </div>
-              </div>
-            </header>
+            <div className="font-bold text-xl text-emerald-700">
+              Cricket Admin
+            </div>
           </div>
-
           <div className="flex flex-row gap-2">
-            <ThemeToggle className="m-2" />
+            <ModeToggle />
             <SignedIn>
               <UserButton afterSignOutUrl="/sign-in" />
             </SignedIn>

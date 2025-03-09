@@ -30,7 +30,8 @@ import {
 import { Plus, Search, Edit, Trash2, Filter, Download } from "lucide-react";
 import { AddPlayerForm } from "@/components/add-player-form";
 import { EditplayerForm } from "@/components/edit-player-form";
-
+import { SiteFooter } from "@/components/site-footer";
+import { Separator } from "@/components/ui/separator";
 export default function PlayersPage() {
   const [players, setPlayers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,10 +74,11 @@ export default function PlayersPage() {
     }
   };
 
-  const filteredPlayers = players.filter((player) =>
-    player.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (categoryFilter === "all" || player.category === categoryFilter) &&
-    (universityFilter === "all" || player.university === universityFilter)
+  const filteredPlayers = players.filter(
+    (player) =>
+      player.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (categoryFilter === "all" || player.category === categoryFilter) &&
+      (universityFilter === "all" || player.university === universityFilter)
   );
 
   const categories = [...new Set(players.map((player) => player.category))];
@@ -87,7 +89,9 @@ export default function PlayersPage() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold">Players Management</h1>
-          <p className="text-muted-foreground">Manage player information efficiently.</p>
+          <p className="text-muted-foreground">
+            Manage player information efficiently.
+          </p>
         </div>
         {admin && (
           <Dialog open={isAddPlayerOpen} onOpenChange={setIsAddPlayerOpen}>
@@ -101,7 +105,10 @@ export default function PlayersPage() {
                 <DialogTitle>Add New Player</DialogTitle>
                 <DialogDescription>Enter player details.</DialogDescription>
               </DialogHeader>
-              <AddPlayerForm setTrigger={setTrigger} onSuccess={() => setIsAddPlayerOpen(false)} />
+              <AddPlayerForm
+                setTrigger={setTrigger}
+                onSuccess={() => setIsAddPlayerOpen(false)}
+              />
             </DialogContent>
           </Dialog>
         )}
@@ -109,7 +116,7 @@ export default function PlayersPage() {
           <Download className="mr-2 h-4 w-4" /> Export
         </Button>
       </div>
-
+      <Separator />
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -120,6 +127,7 @@ export default function PlayersPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+
         <div className="flex gap-2">
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-[180px]">
@@ -128,7 +136,9 @@ export default function PlayersPage() {
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categories.map((category) => (
-                <SelectItem key={category} value={category}>{category}</SelectItem>
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -139,7 +149,9 @@ export default function PlayersPage() {
             <SelectContent>
               <SelectItem value="all">All Universities</SelectItem>
               {universities.map((university) => (
-                <SelectItem key={university} value={university}>{university}</SelectItem>
+                <SelectItem key={university} value={university}>
+                  {university}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -149,12 +161,12 @@ export default function PlayersPage() {
       <div className="border rounded-md">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>University</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Points</TableHead>
-              <TableHead className="text-right">Value</TableHead>
+            <TableRow className="bg-gradient-to-r from-blue-700 to-green-800">
+              <TableHead className="text-white">Name</TableHead>
+              <TableHead className="text-white">University</TableHead>
+              <TableHead className="text-white">Category</TableHead>
+              <TableHead className="text-right text-white">Points</TableHead>
+              <TableHead className="text-right text-white">Value</TableHead>
               {admin && <TableHead className="text-right">Actions</TableHead>}
             </TableRow>
           </TableHeader>
@@ -165,11 +177,16 @@ export default function PlayersPage() {
                   <TableCell>{player.name}</TableCell>
                   <TableCell>{player.university}</TableCell>
                   <TableCell>{player.category}</TableCell>
-                  <TableCell className="text-right">{player.points.toFixed(2)}</TableCell>
+                  <TableCell className="text-right">
+                    {player.points.toFixed(2)}
+                  </TableCell>
                   <TableCell className="text-right">{player.value}</TableCell>
                   {admin && (
                     <TableCell className="text-right">
-                      <Button onClick={() => handleDeletePlayer(player._id)} variant="ghost">
+                      <Button
+                        onClick={() => handleDeletePlayer(player._id)}
+                        variant="ghost"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -186,7 +203,7 @@ export default function PlayersPage() {
           </TableBody>
         </Table>
       </div>
-      <SiteFooter className="m-0 w-fit" />
+      <SiteFooter className="m-0 w-fit bg-pink-400" />
     </div>
   );
 }

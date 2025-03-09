@@ -697,19 +697,14 @@ export default function TournamentSummaryPage() {
           {/* Main Content */}
           <Tabs defaultValue="results" className="space-y-6">
             <div className="rounded-lg p-1.5" style={{ background: "#1b5e20" }}>
-              <TabsList className="grid w-full grid-cols-3 bg-white/10 text-white">
+              <TabsList className="grid w-full grid-cols-2 bg-white/10 text-white">
                 <TabsTrigger
                   value="results"
                   className="data-[state=active]:bg-white data-[state=active]:text-primary rounded-md"
                 >
                   Match Results
                 </TabsTrigger>
-                <TabsTrigger
-                  value="rankings"
-                  className="data-[state=active]:bg-white data-[state=active]:text-primary rounded-md"
-                >
-                  Team Rankings
-                </TabsTrigger>
+
                 <TabsTrigger
                   value="performers"
                   className="data-[state=active]:bg-white data-[state=active]:text-primary rounded-md"

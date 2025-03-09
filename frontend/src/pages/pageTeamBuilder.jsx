@@ -16,7 +16,8 @@ import { SiteFooter } from "@/components/site-footer";
 import { useState } from "react";
 import { BirdIcon as Cricket, Dice1 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 export default function TeamBuilder() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [players, setPlayers] = useState([]);
@@ -44,26 +45,24 @@ export default function TeamBuilder() {
   const handleCloseSuccess = () => {
     setShowSuccess(false);
   };
-  
 
-const handleSelectPlayer = (player) => {
-  if (selectedPlayers.length >= maxPlayers) {
-    return;
-  }
+  const handleSelectPlayer = (player) => {
+    if (selectedPlayers.length >= maxPlayers) {
+      return;
+    }
 
-  if (selectedPlayers.find((p) => p._id === player._id)) {
-    return;
-  }
+    if (selectedPlayers.find((p) => p._id === player._id)) {
+      return;
+    }
 
-  if (budget < player.value) {
-    return;
-  }
+    if (budget < player.value) {
+      return;
+    }
 
-  setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
-  setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
-  setBudget((prevBudget) => prevBudget - player.value);
-};
-
+    setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
+    setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
+    setBudget((prevBudget) => prevBudget - player.value);
+  };
 
   // const handleSelectPlayer = (player) => {
   //   if (selectedPlayers.length >= maxPlayers) {
@@ -119,16 +118,10 @@ const handleSelectPlayer = (player) => {
     }
   };
 
-  const playerCategories = [
-    "Batsman",
-    "Bowler",
-    "All-Rounder"
-  ];
+  const playerCategories = ["Batsman", "Bowler", "All-Rounder"];
 
   return (
     <div className="min-h-screen ">
-      
-
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-[1fr_350px]">
           <div className="space-y-6">
