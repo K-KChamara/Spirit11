@@ -12,18 +12,15 @@ import { TeamSummary } from "@/components/team-summary";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FullScreenSuccess } from "@/components/team-success-alert";
-import { SiteFooter } from "@/components/site-footer";
-import { useState } from "react";
-import { BirdIcon as Cricket, Dice1 } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BirdIcon as Cricket } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+
 export default function TeamBuilder() {
   const navigate = useNavigate();
-  
+  const { isSignedIn, user } = useUser();
+
   const [userId, setUserId] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [players, setPlayers] = useState([]);
@@ -31,56 +28,24 @@ export default function TeamBuilder() {
   const [selectedPlayerId, setSelectedPlayerId] = useState([]);
   const [teamName, setTeamName] = useState("My Cricket Team");
   const [budget, setBudget] = useState(9000000);
-  const [activeTab, setActiveTab] = useState("players");
-  const { isSignedIn, user, isLoaded } = useUser();
-
-
-  if (!isSignedIn) {
-    navigate("/sign-in");
-    return;
-  }
   const initialBudget = 9000000;
-  const [teams  , setTeams]  = useState([]);
-  const [teamMakeDisabled ,setTeamMakeDisabled] = useState(true);
+  const [teams, setTeams] = useState([]);
+  const [teamMakeDisabled, setTeamMakeDisabled] = useState(true);
   const maxPlayers = 11;
 
   // Handle user sign-in check and set userId
   useEffect(() => {
-    const getAllPlayers = async () => {
-      const response = await axios.get("http://localhost:3000/api/player");
-      setPlayers(response.data);
-    };
-    getAllPlayers();
-  }, []);
-  // const handleCloseSuccess = () => {
-  //   setShowSuccess(false);
-  // };
-
-  // const handleSelectPlayer = (player) => {
-  //   if (selectedPlayers.length >= maxPlayers) {
-  //     return;
-  //   }
-
-  //   if (selectedPlayers.find((p) => p._id === player._id)) {
-  //     return;
-  //   }
-
-  //   if (budget < player.value) {
-  //     return;
-  //   }
-
-  //   if (isSignedIn && user) {
-  //     setUserId(user.id);
-  //   } else {
-  //     navigate("/sign-in");
-  //   }
-  // }, [isSignedIn, user, navigate]);
-  
+    if (isSignedIn && user) {
+      setUserId(user.id);
+    } else {
+      navigate("/sign-in");
+    }
+  }, [isSignedIn, user, navigate]);
 
   // Fetch player data from API
   useEffect(() => {
     const getAllPlayers = async () => {
-      console.log("Fetching players...")
+      console.log("Fetching players...");
       try {
         const response = await axios.get("http://localhost:3000/api/player");
         setPlayers(response.data);
@@ -88,13 +53,13 @@ export default function TeamBuilder() {
         console.error("Error fetching players:", error);
       }
     };
-  getAllPlayers();
+    getAllPlayers();
     // const getAllTeams = async () => {
     //   console.log("getAllTeams called")
     //   try {
     //     const response = await axios.get("http://localhost:3000/api/team");
     //     setTeams(response.data);
-  
+
     //     // Check if any team's userId matches the current userId
     //     const userTeam = response.data.find((team) => team.userId === userId);
     //     if (userTeam) {
@@ -106,15 +71,13 @@ export default function TeamBuilder() {
     //     console.error("Error fetching teams:", error);
     //   }
     // };
-  
+
     // getAllTeams();
     // console.log("teams"  , teams )
     // console.log("userId" , userId)
     // console.log("teamMakeDisabled" ,teamMakeDisabled)
-
-   
   }, []);
-  
+
   useEffect(() => {
     if (userId) {
       const getAllTeams = async () => {
@@ -122,33 +85,36 @@ export default function TeamBuilder() {
         try {
           const response = await axios.get("http://localhost:3000/api/team");
           setTeams(response.data);
-  
+
           // Check if any team's userId matches the current userId
           const userTeam = response.data.find((team) => team.userId === userId);
-          console.log("userTeam" , userTeam)
+          console.log("userTeam", userTeam);
           if (userTeam) {
-            setTeamMakeDisabled(true);  // Disable team creation if the team exists for this user
+            setTeamMakeDisabled(true); // Disable team creation if the team exists for this user
           } else {
-            setTeamMakeDisabled(false);  // Enable team creation if no team exists for this user
+            setTeamMakeDisabled(false); // Enable team creation if no team exists for this user
           }
         } catch (error) {
           console.error("Error fetching teams:", error);
         }
       };
-  
+
       getAllTeams();
-      console.log(teamMakeDisabled)
+      console.log(teamMakeDisabled);
     }
   }, [userId]); // This will run whenever userId changes
-  
 
   const handleCloseSuccess = () => setShowSuccess(false);
 
   const handleSelectPlayer = (player) => {
-    if (selectedPlayers.length >= maxPlayers || selectedPlayers.find((p) => p._id === player._id) || budget < player.value) {
+    if (
+      selectedPlayers.length >= maxPlayers ||
+      selectedPlayers.find((p) => p._id === player._id) ||
+      budget < player.value
+    ) {
       return;
     }
-    
+
     setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
     setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
     setBudget((prevBudget) => prevBudget - player.value);
@@ -162,7 +128,10 @@ export default function TeamBuilder() {
     }
   };
 
-  const totalPoints = selectedPlayers.reduce((sum, player) => sum + player.points, 0);
+  const totalPoints = selectedPlayers.reduce(
+    (sum, player) => sum + player.points,
+    0
+  );
 
   const handleSaveTeam = async () => {
     if (selectedPlayers.length !== maxPlayers) {
@@ -189,10 +158,15 @@ export default function TeamBuilder() {
     }
   };
 
-  const playerCategories = ["Batsman", "Bowler", "All-Rounder"];
+  const playerCategories = [
+    "Batsman",
+    "Bowler",
+    "All-Rounder",
+    "Wicket-Keepers",
+  ];
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-[1fr_350px]">
           <div className="space-y-6">
@@ -202,7 +176,7 @@ export default function TeamBuilder() {
                   Build Your Dream Team
                 </CardTitle>
                 <CardDescription>
-                  Select 14 players within your budget of LKR 9,000,000
+                  Select 14 players within your budget of ₹9,000,000
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -211,7 +185,7 @@ export default function TeamBuilder() {
                     <div>
                       <p className="text-sm font-medium">Budget Remaining</p>
                       <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        LKR {budget.toLocaleString()}
+                        Rs. {budget.toLocaleString()}
                       </p>
                     </div>
                     <div>
@@ -222,13 +196,16 @@ export default function TeamBuilder() {
                     </div>
                   </div>
 
-                  <Progress value={((initialBudget - budget) / initialBudget) * 100} className="h-2 bg-green-200 dark:bg-green-800" />
+                  <Progress
+                    value={((initialBudget - budget) / initialBudget) * 100}
+                    className="h-2 bg-green-200 dark:bg-green-800"
+                  />
                 </div>
               </CardContent>
             </Card>
 
             <Tabs defaultValue={playerCategories[0]} className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 {playerCategories.map((category) => (
                   <TabsTrigger key={category} value={category}>
                     {category}
@@ -245,8 +222,14 @@ export default function TeamBuilder() {
                         <PlayerCard
                           key={player._id}
                           player={player}
-                          isSelected={selectedPlayers.some((p) => p._id === player._id)}
-                          isDisabled={budget < player.value || selectedPlayers.some((p) => p._id === player._id) || selectedPlayers.length >= maxPlayers}
+                          isSelected={selectedPlayers.some(
+                            (p) => p._id === player._id
+                          )}
+                          isDisabled={
+                            budget < player.value ||
+                            selectedPlayers.some((p) => p._id === player._id) ||
+                            selectedPlayers.length >= maxPlayers
+                          }
                           onSelect={() => handleSelectPlayer(player)}
                         />
                       ))}
@@ -264,12 +247,11 @@ export default function TeamBuilder() {
               totalPoints={totalPoints}
               onRemovePlayer={handleRemovePlayer}
               onSaveTeam={handleSaveTeam}
-              off = {teamMakeDisabled}
+              off={teamMakeDisabled}
             />
           </div>
         </div>
       </main>
-      <SiteFooter className="m-0 w-fit" />
     </div>
   );
 }

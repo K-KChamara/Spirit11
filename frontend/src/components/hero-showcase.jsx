@@ -105,8 +105,6 @@ export function HeroShowcase() {
             <Users className="mr-2 h-4 w-4" />
             Star Players
           </TabsTrigger>
-        
-            
         </TabsList>
 
         {/* Top Teams Tab */}
@@ -268,8 +266,10 @@ export function HeroShowcase() {
                   </Badge>
                   <Award className="h-6 w-6 text-blue-500" />
                 </div>
-                <CardTitle className="mt-2">{topAllRounders[0].name}</CardTitle>
-                <CardDescription>{topAllRounders[0].university}</CardDescription>
+                <CardTitle className="mt-2">{topAllRounders[0]?.name ?? 0}</CardTitle>
+                <CardDescription>
+                {topAllRounders[0]?.university ?? 0}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-4">
@@ -281,7 +281,9 @@ export function HeroShowcase() {
                     <AvatarFallback>DJ</AvatarFallback>
                   </Avatar>
                   <div className="text-right">
-                    <div className="text-2xl font-bold">{topAllRounders[0].totalRuns}</div>
+                    <div className="text-2xl font-bold">
+                    {topAllRounders[0]?.totalRuns ?? 0}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       Season Runs
                     </div>
@@ -289,20 +291,26 @@ export function HeroShowcase() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center text-sm">
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">{topAllRounders[0].economyRate.toFixed(2)}</div>
-                    <div className="text-xs text-muted-foreground">Economy Rate</div>
+                    <div className="font-medium">
+                    {topAllRounders[0]?.totalRuns.toFixed(2) ?? 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Economy Rate
+                    </div>
                   </div>
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">{topAllRounders[0].battingStrikeRate.toFixed(2)}</div>
+                    <div className="font-medium">
+                    {topAllRounders[0]?.totalRuns.toFixed(2) ?? 0}
+                    </div>
                     <div className="text-xs text-muted-foreground">
                       Strike Rate
                     </div>
                   </div>
                   <div className="bg-background rounded-md p-2">
-                    <div className="font-medium">{topAllRounders[0].points.toFixed(2)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      Points
+                    <div className="font-medium">
+                    {topAllRounders[0]?.totalRuns.toFixed(2) ?? 0}
                     </div>
+                    <div className="text-xs text-muted-foreground">Points</div>
                   </div>
                 </div>
               </CardContent>

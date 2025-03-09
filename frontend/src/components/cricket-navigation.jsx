@@ -17,6 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
+import Navbar from "./NavBar";
 
 const navigationItems = [
   { name: "Dashboard", path: "/", icon: Home },
@@ -82,7 +83,7 @@ export default function CricketNavigation({ children }) {
                 className="w-[250px] p-0 border-r-emerald-200"
               >
                 <div className="p-4 font-bold text-xl border-b bg-emerald-600 text-white">
-                  Cricket Admin
+                  Cricket
                 </div>
                 <SignedIn>
                   <nav className="p-2 bg-white">
@@ -108,12 +109,11 @@ export default function CricketNavigation({ children }) {
                 </SignedIn>
               </SheetContent>
             </Sheet>
-            <div className="font-bold text-xl text-emerald-700">
-              Cricket Admin
+            <div className="ml-50 font-bold text-3xl text-emerald-700">
+              Spirit 11
             </div>
           </div>
           <div className="flex flex-row gap-2">
-            <ModeToggle />
             <SignedIn>
               <UserButton afterSignOutUrl="/sign-in" />
             </SignedIn>
