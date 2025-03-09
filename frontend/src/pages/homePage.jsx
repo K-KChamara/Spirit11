@@ -12,11 +12,36 @@ import { UserNav } from "@/components/user-nav";
 import { CreateTeamModal } from "@/components/create-team-modal";
 import { SiteFooter } from "../components/site-footer.jsx";
 import { HeroShowcase } from "../components/hero-showcase.jsx";
-// import Chatbot from "../components/chat-bot.jsx";
+import Chatbot from "../components/chat-bot.jsx";
+import { useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+
 
 export default function Home() {
-  // Shared state for active tab
+  
   const [activeTab, setActiveTab] = useState("players");
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return
+    }
+
+
+  // If user data is still loading, we can show a loading state
+
+  // Shared state for active tab
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
