@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DialogFooter } from "@/components/ui/dialog"
 import axios from "axios"
 
-export function AddPlayerForm({ onSuccess , setTrigger }) {
+export function EditplayerForm({ onSuccess , setTrigger , player }) {
+    
   const [players, setPlayers] = useState([])
   const [suggestions, setSuggestions] = useState([])
 
@@ -27,15 +28,15 @@ export function AddPlayerForm({ onSuccess , setTrigger }) {
   const uniqueUniversities = [...new Set(players.map((player) => player.university))]
 
   const [formData, setFormData] = useState({
-    name: "",
-    university: "",
-    category: "",
-    totalRuns: 0,
-    ballsFaced: 0,
-    inningsPlayed: 0,
-    wickets: 0,
-    oversBowled: 0,
-    runsConceded: 0,
+    name: player.name||"",
+    university: player.university||"",
+    category: player.category||"Bowler",
+    totalRuns:player.totalRuns|| 0,
+    ballsFaced:player.ballsFaced|| 0,
+    inningsPlayed:player.inningsPlayed|| 0,
+    wickets: player.wickets||0,
+    oversBowled:player.oversBowled|| 0,
+    runsConceded: player.runsConceded||0,
   })
 
   const handleChange = (e) => {
@@ -72,7 +73,7 @@ export function AddPlayerForm({ onSuccess , setTrigger }) {
     e.preventDefault()
     console.log("Submitting player data:", formData)
     try{
-      const res = await axios.post("http://localhost:3000/api/player", formData)
+      const res = await axios.put(`http://localhost:3000/api/player/${player._id}`, formData)
       alert(`Player ${res.data.name} added successfully!`)
       setTrigger( pre  => !pre)
       setFormData({
@@ -183,7 +184,7 @@ export function AddPlayerForm({ onSuccess , setTrigger }) {
       </div>
 
         <div className="flex flex-row gap-2">
-        <Button type="submit">Add Player</Button>
+        <Button type="submit">UpadatePlayer</Button>
         <Button type="button" variant="outline" onClick={() => onSuccess()}>
           Cancel
         </Button>

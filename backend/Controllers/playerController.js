@@ -102,3 +102,41 @@ export const getTopAllRounders = async (req, res) => {
     res.status(500).json({message: error.message});
   }
 }
+export const deletePlayer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const player = await Player.findByIdAndDelete(id);
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found' });
+    }
+    res.json({ message: 'Player deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+}
+
+export const getPlayerById = async (req, res) => {
+  try {
+    const player = await Player.findById(req.params.id);
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found' });
+    }
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export const updatePlayer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const player = await Player.findByIdAndUpdate(id, req.body, { new: true });
+    if (!player) {
+      return res.status(404).json({ message: 'Player not found' });
+    }
+    res.json(player);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

@@ -30,7 +30,7 @@ import Navbar from "./NavBar";
 const navigationItems = [
   { name: "Dashboard", path: "/", icon: Home },
   { name: "Players", path: "/players", icon: Users },
-  { name: "Player Stats", path: "/player-stats", icon: BarChart2 },
+  { name: "Player Stats", path: "/player-stats", icon: BarChart2, adminOnly: true },
   { name: "Tournament", path: "/tournament-summary", icon: Trophy },
   { name: "Live Stream", path: "/live-stream", icon: RadioIcon },
   { name: "Leaderboard", path: "/leaderboard", icon: Award },
@@ -76,7 +76,7 @@ export default function CricketNavigation({ children }) {
                 </div>
                 <SignedIn>
                   <nav className="p-2 bg-white">
-                    {navigationItems.map((item) => (
+                    {filteredNavigationItems.map((item) => (
                       <Button
                         key={item.path}
                         variant={
@@ -151,7 +151,7 @@ export default function CricketNavigation({ children }) {
             onValueChange={(value) => navigate(value)}
           >
             <TabsList className="h-10 w-full justify-start bg-transparent p-0">
-              {navigationItems.map((item) => (
+              {filteredNavigationItems.map((item) => (
                 <TabsTrigger
                   key={item.path}
                   value={item.path}

@@ -16,270 +16,6 @@ import { SiteFooter } from "@/components/site-footer";
 import { useState } from "react";
 import { BirdIcon as Cricket, Dice1 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
-
-//  const players = [
-//     // Batsmen
-//     {
-//       id: 1,
-//       name: "Virat Kohli",
-//       team: "Royal Challengers Bangalore",
-//       type: "Batsmen",
-//       value: 1200000,
-//       points: 950,
-
-//     },
-//     {
-//       id: 2,
-//       name: "Rohit Sharma",
-//       team: "Mumbai Indians",
-//       type: "Batsmen",
-//       value: 1150000,
-//       points: 920,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 3,
-//       name: "Kane Williamson",
-//       team: "Sunrisers Hyderabad",
-//       type: "Batsmen",
-//       value: 950000,
-//       points: 880,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 4,
-//       name: "David Warner",
-//       team: "Delhi Capitals",
-//       type: "Batsmen",
-//       value: 1050000,
-//       points: 900,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 5,
-//       name: "Steve Smith",
-//       team: "Rajasthan Royals",
-//       type: "Batsmen",
-//       value: 900000,
-//       points: 850,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 6,
-//       name: "KL Rahul",
-//       team: "Punjab Kings",
-//       type: "Batsmen",
-//       value: 1000000,
-//       points: 890,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 7,
-//       name: "Shikhar Dhawan",
-//       team: "Delhi Capitals",
-//       type: "Batsmen",
-//       value: 850000,
-//       points: 830,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 8,
-//       name: "Faf du Plessis",
-//       team: "Chennai Super Kings",
-//       type: "Batsmen",
-//       value: 800000,
-//       points: 820,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-
-//     // Bowlers
-//     {
-//       id: 9,
-//       name: "Jasprit Bumrah",
-//       team: "Mumbai Indians",
-//       type: "Bowlers",
-//       value: 1100000,
-//       points: 910,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 10,
-//       name: "Kagiso Rabada",
-//       team: "Delhi Capitals",
-//       type: "Bowlers",
-//       value: 950000,
-//       points: 870,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 11,
-//       name: "Trent Boult",
-//       team: "Mumbai Indians",
-//       type: "Bowlers",
-//       value: 900000,
-//       points: 860,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 12,
-//       name: "Rashid Khan",
-//       team: "Sunrisers Hyderabad",
-//       type: "Bowlers",
-//       value: 1050000,
-//       points: 890,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 13,
-//       name: "Mohammed Shami",
-//       team: "Punjab Kings",
-//       type: "Bowlers",
-//       value: 850000,
-//       points: 840,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 14,
-//       name: "Bhuvneshwar Kumar",
-//       team: "Sunrisers Hyderabad",
-//       type: "Bowlers",
-//       value: 800000,
-//       points: 830,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 15,
-//       name: "Yuzvendra Chahal",
-//       team: "Royal Challengers Bangalore",
-//       type: "Bowlers",
-//       value: 850000,
-//       points: 840,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 16,
-//       name: "Pat Cummins",
-//       team: "Kolkata Knight Riders",
-//       type: "Bowlers",
-//       value: 950000,
-//       points: 870,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-
-//     // All-Rounders
-//     {
-//       id: 17,
-//       name: "Hardik Pandya",
-//       team: "Mumbai Indians",
-//       type: "All-Rounders",
-//       value: 1000000,
-//       points: 880,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 18,
-//       name: "Andre Russell",
-//       team: "Kolkata Knight Riders",
-//       type: "All-Rounders",
-//       value: 1050000,
-//       points: 890,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 19,
-//       name: "Ravindra Jadeja",
-//       team: "Chennai Super Kings",
-//       type: "All-Rounders",
-//       value: 950000,
-//       points: 870,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 20,
-//       name: "Ben Stokes",
-//       team: "Rajasthan Royals",
-//       type: "All-Rounders",
-//       value: 1000000,
-//       points: 880,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 21,
-//       name: "Krunal Pandya",
-//       team: "Mumbai Indians",
-//       type: "All-Rounders",
-//       value: 800000,
-//       points: 820,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 22,
-//       name: "Moeen Ali",
-//       team: "Chennai Super Kings",
-//       type: "All-Rounders",
-//       value: 850000,
-//       points: 830,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-
-//     // Wicket-Keepers
-//     {
-//       id: 23,
-//       name: "MS Dhoni",
-//       team: "Chennai Super Kings",
-//       type: "Wicket-Keepers",
-//       value: 950000,
-//       points: 870,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 24,
-//       name: "Rishabh Pant",
-//       team: "Delhi Capitals",
-//       type: "Wicket-Keepers",
-//       value: 900000,
-//       points: 860,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 25,
-//       name: "Jos Buttler",
-//       team: "Rajasthan Royals",
-//       type: "Wicket-Keepers",
-//       value: 950000,
-//       points: 870,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 26,
-//       name: "Quinton de Kock",
-//       team: "Mumbai Indians",
-//       type: "Wicket-Keepers",
-//       value: 900000,
-//       points: 860,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 27,
-//       name: "Jonny Bairstow",
-//       team: "Sunrisers Hyderabad",
-//       type: "Wicket-Keepers",
-//       value: 850000,
-//       points: 840,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//     {
-//       id: 28,
-//       name: "Ishan Kishan",
-//       team: "Mumbai Indians",
-//       type: "Wicket-Keepers",
-//       value: 800000,
-//       points: 820,
-//       image: "/placeholder.svg?height=100&width=100",
-//     },
-//   ]
 
 export default function TeamBuilder() {
   const [showSuccess, setShowSuccess] = useState(false);
@@ -297,7 +33,7 @@ export default function TeamBuilder() {
     return;
   }
   const initialBudget = 9000000;
-  const maxPlayers = 14;
+  const maxPlayers = 11;
   useEffect(() => {
     const getAllPlayers = async () => {
       const response = await axios.get("http://localhost:3000/api/player");
@@ -308,24 +44,44 @@ export default function TeamBuilder() {
   const handleCloseSuccess = () => {
     setShowSuccess(false);
   };
+  
 
-  const handleSelectPlayer = (player) => {
-    if (selectedPlayers.length >= maxPlayers) {
-      return;
-    }
+const handleSelectPlayer = (player) => {
+  if (selectedPlayers.length >= maxPlayers) {
+    return;
+  }
 
-    if (selectedPlayers.find((p) => p._id === player._id)) {
-      return;
-    }
+  if (selectedPlayers.find((p) => p._id === player._id)) {
+    return;
+  }
 
-    if (budget < player.value) {
-      return;
-    }
+  if (budget < player.value) {
+    return;
+  }
 
-    setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
-    setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
-    setBudget((prevBudget) => prevBudget - player.value);
-  };
+  setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
+  setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
+  setBudget((prevBudget) => prevBudget - player.value);
+};
+
+
+  // const handleSelectPlayer = (player) => {
+  //   if (selectedPlayers.length >= maxPlayers) {
+  //     return;
+  //   }
+
+  //   if (selectedPlayers.find((p) => p._id === player._id)) {
+  //     return;
+  //   }
+
+  //   if (budget < player.value) {
+  //     return;
+  //   }
+
+  //   setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
+  //   setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
+  //   setBudget((prevBudget) => prevBudget - player.value);
+  // };
 
   const handleRemovePlayer = (playerId) => {
     const player = selectedPlayers.find((p) => p._id === playerId);
@@ -433,10 +189,24 @@ export default function TeamBuilder() {
                           )}
                           isDisabled={
                             budget < player.value ||
-                            selectedPlayers.some((p) => p._id === player._id)
+                            selectedPlayers.some((p) => p._id === player._id) ||
+                            selectedPlayers.length >= maxPlayers
                           }
                           onSelect={() => handleSelectPlayer(player)}
                         />
+
+                        // <PlayerCard
+                        //   key={player._id}
+                        //   player={player}
+                        //   isSelected={selectedPlayers.some(
+                        //     (p) => p._id === player._id
+                        //   )}
+                        //   isDisabled={
+                        //     budget < player.value ||
+                        //     selectedPlayers.some((p) => p._id === player._id)
+                        //   }
+                        //   onSelect={() => handleSelectPlayer(player)}
+                        // />
                       ))}
                   </div>
                 </TabsContent>

@@ -1,41 +1,49 @@
-
-
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export function PlayerCard({ player, isSelected, isDisabled, onSelect }) {
-
   const getInitials = (name) => {
     return name
       .split(" ")
       .map((part) => part[0])
-      .join("")
-  }
+      .join("");
+  };
 
   const getTypeColor = (type) => {
     switch (type) {
       case "Batsman":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
       case "Bowler":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
       case "All-Rounders":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
       case "Wicket-Keepers":
-        return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
     }
-  }
+  };
 
   return (
-    <Card className={`overflow-hidden transition-all ${isSelected ? "ring-2 ring-green-500 dark:ring-green-400" : ""}`}>
+    <Card
+      className={`overflow-hidden transition-all ${
+        isSelected ? "ring-2 ring-green-500 dark:ring-green-400" : ""
+      }`}
+    >
       <CardHeader className="p-4 pb-0">
         <div className="flex items-start justify-between">
           <Avatar className="h-12 w-12 border-2 border-green-100 dark:border-green-800">
-            <AvatarImage  alt={player.name} />
-            <AvatarFallback className="bg-green-600 text-white">{getInitials(player.name)}</AvatarFallback>
+            <AvatarImage alt={player.name} />
+            <AvatarFallback className="bg-green-600 text-white">
+              {getInitials(player.name)}
+            </AvatarFallback>
           </Avatar>
           <Badge variant="outline" className={getTypeColor(player.category)}>
             {player.category}
@@ -64,10 +72,17 @@ export function PlayerCard({ player, isSelected, isDisabled, onSelect }) {
           variant={isSelected ? "outline" : "default"}
           className="w-full"
         >
-          {isSelected ? "Selected" : "Select Player"}
+          {isSelected ? "Selected" : "Select"}
         </Button>
+        {/* <Button
+          onClick={onSelect}
+          disabled={isDisabled}
+          variant={isSelected ? "outline" : "default"}
+          className="w-full"
+        >
+          {isSelected ? "Selected" : "Select Player"}
+        </Button> */}
       </CardFooter>
     </Card>
-  )
+  );
 }
-

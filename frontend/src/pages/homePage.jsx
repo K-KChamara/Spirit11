@@ -10,9 +10,10 @@ import FeatureShowcase from "@/components/feature-showcase";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SiteFooter } from "../components/site-footer.jsx";
 import { HeroShowcase } from "../components/hero-showcase.jsx";
-// import Chatbot from "../components/chat-bot.jsx";
+
 import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
+
 import { useNavigate } from "react-router-dom";
 import Chatbot from "@/components/chatbot.jsx";
 
