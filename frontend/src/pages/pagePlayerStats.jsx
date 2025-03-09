@@ -36,74 +36,8 @@ import {
 import { UpdateStatsForm } from "@/components/update-stats-form";
 import { useEffect } from "react";
 import axios from "axios";
-// Sample data
-// const players = [
-//   {
-//     id: 1,
-//     name: "Virat Kohli",
-//     university: "Delhi University",
-//     category: "Batsman",
-//     totalRuns: 3500,
-//     ballsFaced: 2800,
-//     inningsPlayed: 75,
-//     wickets: 5,
-//     oversBowled: 120,
-//     runsConceded: 980,
-//     value: 15.5,
-//   },
-//   {
-//     id: 2,
-//     name: "Rohit Sharma",
-//     university: "Mumbai University",
-//     category: "Batsman",
-//     totalRuns: 3200,
-//     ballsFaced: 2500,
-//     inningsPlayed: 72,
-//     wickets: 12,
-//     oversBowled: 200,
-//     runsConceded: 1100,
-//     value: 14.8,
-//   },
-//   {
-//     id: 3,
-//     name: "Jasprit Bumrah",
-//     university: "Gujarat University",
-//     category: "Bowler",
-//     totalRuns: 350,
-//     ballsFaced: 420,
-//     inningsPlayed: 45,
-//     wickets: 95,
-//     oversBowled: 850,
-//     runsConceded: 3200,
-//     value: 14.2,
-//   },
-//   {
-//     id: 4,
-//     name: "Ravindra Jadeja",
-//     university: "Saurashtra University",
-//     category: "All-Rounder",
-//     totalRuns: 1800,
-//     ballsFaced: 1500,
-//     inningsPlayed: 68,
-//     wickets: 75,
-//     oversBowled: 780,
-//     runsConceded: 3100,
-//     value: 13.5,
-//   },
-//   {
-//     id: 5,
-//     name: "KL Rahul",
-//     university: "Karnataka University",
-//     category: "Batsman",
-//     totalRuns: 2800,
-//     ballsFaced: 2300,
-//     inningsPlayed: 65,
-//     wickets: 0,
-//     oversBowled: 0,
-//     runsConceded: 0,
-//     value: 12.0,
-//   },
-// ]
+import { useUser } from "@clerk/clerk-react"
+import { useNavigate } from "react-router-dom";
 
 export default function PlayerStatsPage() {
   const [players, setPlayers] = useState([]);
@@ -113,13 +47,28 @@ export default function PlayerStatsPage() {
   const [sortDirection, setSortDirection] = useState("desc");
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isUpdateStatsOpen, setIsUpdateStatsOpen] = useState(false);
+  const [trigger , setTrigger] = useState(false);
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return
+    }
+    if(user.publicMetadata.role !== "admin") {
+      navigate("/home");
+      return
+    }
+
+
   useEffect(() => {
     const getAllPlayers = async () => {
       const response = await axios.get("http://localhost:3000/api/player");
       setPlayers(response.data);
     };
     getAllPlayers();
-  }, []);
+  }, [trigger]);
   console.log("players:", players);
 
   // Filter players based on search term and filters
@@ -164,9 +113,7 @@ export default function PlayerStatsPage() {
     <div className="p-6 space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Player Statistics
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Player Statistics</h1>
           <p className="text-muted-foreground">
             Update and manage player performance statistics.
           </p>
@@ -201,11 +148,13 @@ export default function PlayerStatsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
+              {categories.map((category) =>
+                category ? (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ) : null
+              )}
             </SelectContent>
           </Select>
 
@@ -222,7 +171,6 @@ export default function PlayerStatsPage() {
               <TableHead>Name</TableHead>
               <TableHead>University</TableHead>
               <TableHead>Category</TableHead>
-
               <TableHead
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => handleSort("totalRuns")}
@@ -247,7 +195,6 @@ export default function PlayerStatsPage() {
                   )}
                 </div>
               </TableHead>
-
               <TableHead>Overs Played</TableHead>
               <TableHead
                 className="cursor-pointer hover:bg-muted/50"
@@ -311,6 +258,7 @@ export default function PlayerStatsPage() {
             <UpdateStatsForm
               player={selectedPlayer}
               onSuccess={() => setIsUpdateStatsOpen(false)}
+              setTrigger = {setTrigger}
             />
           </DialogContent>
         </Dialog>

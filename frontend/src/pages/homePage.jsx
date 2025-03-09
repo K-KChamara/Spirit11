@@ -13,8 +13,9 @@ import { CreateTeamModal } from "@/components/create-team-modal";
 import { SiteFooter } from "../components/site-footer.jsx";
 import { HeroShowcase } from "../components/hero-showcase.jsx";
 import Chatbot from "../components/chat-bot.jsx";
-import { useUser } from "@clerk/clerk-react";
 import { useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
+
 import { useNavigate } from "react-router-dom";
 
 

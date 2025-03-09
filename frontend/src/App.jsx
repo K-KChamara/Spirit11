@@ -10,10 +10,12 @@ import LiveStreamPage from "./pages/pageStream";
 import PageSignIn from "./pages/pageSignIn";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SignUpPage from "./pages/signUp";
-
+import { ThemeProvider } from "./components/theme-provider";
 function App() {
   const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
   return (
+    
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/sign-in">
       <Router>
         <Routes>
@@ -36,6 +38,7 @@ function App() {
         </Routes>
       </Router>
     </ClerkProvider>
+    </ThemeProvider>
   );
 }
 
