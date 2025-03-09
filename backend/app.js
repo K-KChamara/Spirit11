@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import PlayerRouter from './Routes/playerRoutes.js';
 import { teamRouter } from './Routes/teamRoutes.js';
 import ChatBotRouter from './Routes/chatBotRoutes.js';
+import teamRouter from './Routes/teamRoutes.js';
+import tournamentRouter from './Routes/tournamentController.js';
 const app = express();
 // Load environment variables
 dotenv.config();
@@ -31,6 +33,7 @@ app.post('/api/data', (req, res) => {
 app.use('/api/player', PlayerRouter);
 app.use('/api/team' ,teamRouter)
 app.use('/api/chatBot',ChatBotRouter);
+app.use('/api/tournament' , tournamentRouter)
 // Add more routes as needed
 // app.get('/example', (req, res) => { ... });
 
