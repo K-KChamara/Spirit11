@@ -1,5 +1,3 @@
-"use client"
-
 import { motion, AnimatePresence } from "framer-motion"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"

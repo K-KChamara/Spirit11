@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Card,
   CardContent,
@@ -21,8 +19,55 @@ import {
   Award,
   Crown,
 } from "lucide-react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export function HeroShowcase() {
+  const [topBatsmen, setTopBatsmen] = useState([]);
+  const [topBowlers, setTopBowlers] = useState([]);
+  const [topAllRounders, setTopAllRounders] = useState([]);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/player");
+        const players = response.data;
+
+        // Categorize Players
+        const bowlers = players
+          .filter((p) => p.category === "Bowler" && p.bowlingStrikeRate)
+          .sort(
+            (a, b) => (b.bowlingStrikeRate ?? 0) - (a.bowlingStrikeRate ?? 0)
+          )
+          .slice(0, 5);
+
+        const batsmen = players
+          .filter((p) => p.category === "Batsman" && p.battingStrikeRate)
+          .sort(
+            (a, b) => (b.battingStrikeRate ?? 0) - (a.battingStrikeRate ?? 0)
+          )
+          .slice(0, 5);
+
+        const allRounders = players
+          .filter((p) => p.category === "All-Rounder" && p.points)
+          .sort((a, b) => (b.points ?? 0) - (a.points ?? 0));
+
+        // Set State
+        setTopBowlers(bowlers);
+        setTopBatsmen(batsmen);
+        setTopAllRounders(allRounders);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      }
+    };
+
+    fetchPlayers();
+  }, []);
+
+  console.log("Top Batsmen:", topBatsmen);
+  console.log("Top Bowlers:", topBowlers);
+  console.log("Top All-rounders:", topAllRounders);
+
   return (
     <section className="py-10">
       <div className="text-center mb-8">
@@ -320,64 +365,7 @@ export function HeroShowcase() {
                   <TabsContent value="batsmen">
                     <ScrollArea className="h-[180px] pr-4">
                       <div className="space-y-2">
-                        {[
-                          {
-                            name: "Virat Kohli",
-                            team: "RCB",
-                            runs: 732,
-                            avg: 56.3,
-                            sr: 152.4,
-                          },
-                          {
-                            name: "KL Rahul",
-                            team: "LSG",
-                            runs: 680,
-                            avg: 52.3,
-                            sr: 148.7,
-                          },
-                          {
-                            name: "Shubman Gill",
-                            team: "GT",
-                            runs: 652,
-                            avg: 50.1,
-                            sr: 145.2,
-                          },
-                          {
-                            name: "Jos Buttler",
-                            team: "RR",
-                            runs: 618,
-                            avg: 47.5,
-                            sr: 155.8,
-                          },
-                          {
-                            name: "Faf du Plessis",
-                            team: "RCB",
-                            runs: 590,
-                            avg: 45.4,
-                            sr: 147.5,
-                          },
-                          {
-                            name: "Rohit Sharma",
-                            team: "MI",
-                            runs: 564,
-                            avg: 43.4,
-                            sr: 151.2,
-                          },
-                          {
-                            name: "Suryakumar Yadav",
-                            team: "MI",
-                            runs: 542,
-                            avg: 41.7,
-                            sr: 163.8,
-                          },
-                          {
-                            name: "David Warner",
-                            team: "DC",
-                            runs: 516,
-                            avg: 39.7,
-                            sr: 142.5,
-                          },
-                        ].map((player, i) => (
+                        {topBatsmen.map((player, i) => (
                           <div
                             key={i}
                             className="flex items-center p-2 rounded-md hover:bg-muted"
@@ -402,23 +390,23 @@ export function HeroShowcase() {
                                 {player.name}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {player.team}
+                                {player.university}
                               </div>
                             </div>
                             <div className="text-center w-16">
-                              <div className="font-medium">{player.runs}</div>
+                              <div className="font-medium">{player.totalRuns}</div>
                               <div className="text-xs text-muted-foreground">
                                 runs
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.avg}</div>
+                              <div className="font-medium">{player.battingAverage.toFixed(2)}</div>
                               <div className="text-xs text-muted-foreground">
                                 avg
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.sr}</div>
+                              <div className="font-medium">{player.battingStrikeRate.toFixed(2)}</div>
                               <div className="text-xs text-muted-foreground">
                                 SR
                               </div>
@@ -432,64 +420,7 @@ export function HeroShowcase() {
                   <TabsContent value="bowlers">
                     <ScrollArea className="h-[180px] pr-4">
                       <div className="space-y-2">
-                        {[
-                          {
-                            name: "Jasprit Bumrah",
-                            team: "MI",
-                            wickets: 28,
-                            economy: 6.8,
-                            avg: 15.2,
-                          },
-                          {
-                            name: "Yuzvendra Chahal",
-                            team: "RR",
-                            wickets: 26,
-                            economy: 7.2,
-                            avg: 16.5,
-                          },
-                          {
-                            name: "Rashid Khan",
-                            team: "GT",
-                            wickets: 24,
-                            economy: 6.5,
-                            avg: 17.8,
-                          },
-                          {
-                            name: "Mohammed Shami",
-                            team: "GT",
-                            wickets: 22,
-                            economy: 7.8,
-                            avg: 18.4,
-                          },
-                          {
-                            name: "Kagiso Rabada",
-                            team: "PBKS",
-                            wickets: 21,
-                            economy: 8.1,
-                            avg: 19.2,
-                          },
-                          {
-                            name: "Trent Boult",
-                            team: "RR",
-                            wickets: 20,
-                            economy: 7.9,
-                            avg: 20.1,
-                          },
-                          {
-                            name: "Harshal Patel",
-                            team: "RCB",
-                            wickets: 19,
-                            economy: 8.3,
-                            avg: 21.5,
-                          },
-                          {
-                            name: "T Natarajan",
-                            team: "SRH",
-                            wickets: 18,
-                            economy: 8.5,
-                            avg: 22.3,
-                          },
-                        ].map((player, i) => (
+                        {topBowlers.map((player, i) => (
                           <div
                             key={i}
                             className="flex items-center p-2 rounded-md hover:bg-muted"
@@ -514,7 +445,7 @@ export function HeroShowcase() {
                                 {player.name}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {player.team}
+                                {player.university}
                               </div>
                             </div>
                             <div className="text-center w-16">
@@ -527,16 +458,16 @@ export function HeroShowcase() {
                             </div>
                             <div className="text-center w-12">
                               <div className="font-medium">
-                                {player.economy}
+                                {player.economyRate.toFixed(2)}
                               </div>
                               <div className="text-xs text-muted-foreground">
                                 econ
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.avg}</div>
+                              <div className="font-medium">{player.bowlingStrikeRate.toFixed(2)}</div>
                               <div className="text-xs text-muted-foreground">
-                                avg
+                                SR
                               </div>
                             </div>
                           </div>
@@ -548,64 +479,7 @@ export function HeroShowcase() {
                   <TabsContent value="all-rounders">
                     <ScrollArea className="h-[180px] pr-4">
                       <div className="space-y-2">
-                        {[
-                          {
-                            name: "Hardik Pandya",
-                            team: "GT",
-                            runs: 385,
-                            wickets: 15,
-                            points: 92,
-                          },
-                          {
-                            name: "Ravindra Jadeja",
-                            team: "CSK",
-                            runs: 320,
-                            wickets: 18,
-                            points: 89,
-                          },
-                          {
-                            name: "Andre Russell",
-                            team: "KKR",
-                            runs: 356,
-                            wickets: 14,
-                            points: 85,
-                          },
-                          {
-                            name: "Marcus Stoinis",
-                            team: "LSG",
-                            runs: 342,
-                            wickets: 12,
-                            points: 78,
-                          },
-                          {
-                            name: "Axar Patel",
-                            team: "DC",
-                            runs: 278,
-                            wickets: 16,
-                            points: 76,
-                          },
-                          {
-                            name: "Moeen Ali",
-                            team: "CSK",
-                            runs: 312,
-                            wickets: 10,
-                            points: 71,
-                          },
-                          {
-                            name: "Sam Curran",
-                            team: "PBKS",
-                            runs: 265,
-                            wickets: 13,
-                            points: 69,
-                          },
-                          {
-                            name: "Wanindu Hasaranga",
-                            team: "RCB",
-                            runs: 218,
-                            wickets: 17,
-                            points: 68,
-                          },
-                        ].map((player, i) => (
+                        {topAllRounders.map((player, i) => (
                           <div
                             key={i}
                             className="flex items-center p-2 rounded-md hover:bg-muted"
@@ -630,11 +504,11 @@ export function HeroShowcase() {
                                 {player.name}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {player.team}
+                                {player.university}
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.runs}</div>
+                              <div className="font-medium">{player.totalRuns}</div>
                               <div className="text-xs text-muted-foreground">
                                 runs
                               </div>
@@ -648,7 +522,7 @@ export function HeroShowcase() {
                               </div>
                             </div>
                             <div className="text-center w-12">
-                              <div className="font-medium">{player.points}</div>
+                              <div className="font-medium">{player.points.toFixed(2)}</div>
                               <div className="text-xs text-muted-foreground">
                                 pts
                               </div>

@@ -10,9 +10,9 @@ import FeatureShowcase from "@/components/feature-showcase";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserNav } from "@/components/user-nav";
 import { CreateTeamModal } from "@/components/create-team-modal";
-import { SiteFooter } from "./components/site-footer.jsx";
-import { HeroShowcase } from "./components/hero-showcase.jsx";
-import Chatbot from "./components/chat-bot.jsx";
+import { SiteFooter } from "../components/site-footer.jsx";
+import { HeroShowcase } from "../components/hero-showcase.jsx";
+// import Chatbot from "../components/chat-bot.jsx";
 
 export default function Home() {
   // Shared state for active tab
@@ -89,7 +89,7 @@ export default function Home() {
           }
         >
           {/* <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} /> */}
-          <Chatbot />
+          {/* <Chatbot /> */}
           <FeatureShowcase />
           <HeroShowcase />
         </Suspense>

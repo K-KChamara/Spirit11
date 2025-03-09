@@ -69,3 +69,36 @@ export const getAllPlayers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+
+
+export const getTopBowlers = async (req, res) => {
+  try{
+    const topBowlers =  await Player.find({category: 'Bowler'}).sort({bowlingStrikeRate:-1}).limit(5);
+    res.json(topBowlers);
+  }
+  catch(error){
+    res.status(500).json({message: error.message});
+  }
+}
+
+export const getTopBatsmen = async (req, res) => {
+  try{
+    const topBatsmen =  await Player.find({category: 'Batsman'}).sort({
+      battingStrikeRate: -1}).limit(5);
+    res.json(topBatsmen);
+  }
+  catch(error){
+    res.status(500).json({message: error.message});
+  }
+}
+
+export const getTopAllRounders = async (req, res) => {
+  try{
+    const topAllRounders =  await Player.find({category: 'All-Rounder'}).sort({points: -1}).limit(5);
+    res.json(topAllRounders);
+  }
+  catch(error){
+    res.status(500).json({message: error.message});
+  }
+}
