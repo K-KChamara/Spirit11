@@ -4,7 +4,7 @@ import cors from 'cors'; // Importing CORS
 import dbConnect from './DataBase/db.js';
 import dotenv from 'dotenv';
 import PlayerRouter from './Routes/playerRoutes.js';
-import { teamRouter } from './Routes/teamRoutes.js';
+import teamRouter from './Routes/teamRoutes.js';
 const app = express();
 // Load environment variables
 dotenv.config();

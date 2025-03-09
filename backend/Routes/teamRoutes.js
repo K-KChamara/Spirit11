@@ -1,6 +1,10 @@
 import express from "express";
 import { getAllTeams ,createTeam } from "../Controllers/teamController.js";
 
-export const teamRouter = express.Router();
+const teamRouter = express.Router();
 
-teamRouter.route('/').get(getAllTeams).post(createTeam);
+// Define the route path before the controller functions
+teamRouter.get('/', getAllTeams); // GET request for all teams
+teamRouter.post('/', createTeam); // POST request to create a new team
+
+export default teamRouter;

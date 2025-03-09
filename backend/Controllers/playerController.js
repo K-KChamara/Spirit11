@@ -99,12 +99,23 @@ export const getPlayerById = async (req, res) => {
 export const updatePlayer = async (req, res) => {
   try {
     const { id } = req.params;
-    const player = await Player.findByIdAndUpdate(id, req.body, { new: true });
+    let player = await Player.findById(id);
+    
     if (!player) {
       return res.status(404).json({ message: 'Player not found' });
     }
+    
+    // Update player data
+    Object.assign(player, req.body);
+    
+    // Recalculate statistics
+    player.calculateStats();
+    
+    // Save updated player
+    await player.save();
+    
     res.json(player);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};

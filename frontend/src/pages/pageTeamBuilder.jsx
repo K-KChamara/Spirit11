@@ -10,14 +10,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlayerCard } from "@/components/player-card";
 import { TeamSummary } from "@/components/team-summary";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FullScreenSuccess } from "@/components/team-success-alert";
-
-import { useState } from "react";
-import { BirdIcon as Cricket, Dice1 } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+import { BirdIcon as Cricket } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function TeamBuilder() {
+  const navigate = useNavigate();
+  const { isSignedIn, user } = useUser();
+  
+  const [userId, setUserId] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
@@ -25,55 +29,96 @@ export default function TeamBuilder() {
   const [teamName, setTeamName] = useState("My Cricket Team");
   const [budget, setBudget] = useState(9000000);
   const initialBudget = 9000000;
+  const [teams  , setTeams]  = useState([]);
+  const [teamMakeDisabled ,setTeamMakeDisabled] = useState(true);
   const maxPlayers = 11;
+
+  // Handle user sign-in check and set userId
   useEffect(() => {
-    const getAllPlayers = async () => {
-      const response = await axios.get("http://localhost:3000/api/player");
-      setPlayers(response.data);
-    };
-    getAllPlayers();
-  }, []);
-  const handleCloseSuccess = () => {
-    setShowSuccess(false);
-  };
+    if (isSignedIn && user) {
+      setUserId(user.id);
+    } else {
+      navigate("/sign-in");
+    }
+  }, [isSignedIn, user, navigate]);
   
 
-const handleSelectPlayer = (player) => {
-  if (selectedPlayers.length >= maxPlayers) {
-    return;
-  }
+  // Fetch player data from API
+  useEffect(() => {
+    const getAllPlayers = async () => {
+      console.log("Fetching players...")
+      try {
+        const response = await axios.get("http://localhost:3000/api/player");
+        setPlayers(response.data);
+      } catch (error) {
+        console.error("Error fetching players:", error);
+      }
+    };
+  getAllPlayers();
+    // const getAllTeams = async () => {
+    //   console.log("getAllTeams called")
+    //   try {
+    //     const response = await axios.get("http://localhost:3000/api/team");
+    //     setTeams(response.data);
+  
+    //     // Check if any team's userId matches the current userId
+    //     const userTeam = response.data.find((team) => team.userId === userId);
+    //     if (userTeam) {
+    //       setTeamMakeDisabled(true);  // Disable team creation if the team exists for this user
+    //     } else {
+    //       setTeamMakeDisabled(false);  // Enable team creation if no team exists for this user
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching teams:", error);
+    //   }
+    // };
+  
+    // getAllTeams();
+    // console.log("teams"  , teams )
+    // console.log("userId" , userId)
+    // console.log("teamMakeDisabled" ,teamMakeDisabled)
 
-  if (selectedPlayers.find((p) => p._id === player._id)) {
-    return;
-  }
+   
+  }, []);
+  
+  useEffect(() => {
+    if (userId) {
+      const getAllTeams = async () => {
+        console.log("getAllTeams called");
+        try {
+          const response = await axios.get("http://localhost:3000/api/team");
+          setTeams(response.data);
+  
+          // Check if any team's userId matches the current userId
+          const userTeam = response.data.find((team) => team.userId === userId);
+          console.log("userTeam" , userTeam)
+          if (userTeam) {
+            setTeamMakeDisabled(true);  // Disable team creation if the team exists for this user
+          } else {
+            setTeamMakeDisabled(false);  // Enable team creation if no team exists for this user
+          }
+        } catch (error) {
+          console.error("Error fetching teams:", error);
+        }
+      };
+  
+      getAllTeams();
+      console.log(teamMakeDisabled)
+    }
+  }, [userId]); // This will run whenever userId changes
+  
 
-  if (budget < player.value) {
-    return;
-  }
+  const handleCloseSuccess = () => setShowSuccess(false);
 
-  setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
-  setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
-  setBudget((prevBudget) => prevBudget - player.value);
-};
-
-
-  // const handleSelectPlayer = (player) => {
-  //   if (selectedPlayers.length >= maxPlayers) {
-  //     return;
-  //   }
-
-  //   if (selectedPlayers.find((p) => p._id === player._id)) {
-  //     return;
-  //   }
-
-  //   if (budget < player.value) {
-  //     return;
-  //   }
-
-  //   setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
-  //   setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
-  //   setBudget((prevBudget) => prevBudget - player.value);
-  // };
+  const handleSelectPlayer = (player) => {
+    if (selectedPlayers.length >= maxPlayers || selectedPlayers.find((p) => p._id === player._id) || budget < player.value) {
+      return;
+    }
+    
+    setSelectedPlayers((prevPlayers) => [...prevPlayers, player]);
+    setSelectedPlayerId((prevIds) => [...prevIds, player._id]);
+    setBudget((prevBudget) => prevBudget - player.value);
+  };
 
   const handleRemovePlayer = (playerId) => {
     const player = selectedPlayers.find((p) => p._id === playerId);
@@ -83,10 +128,7 @@ const handleSelectPlayer = (player) => {
     }
   };
 
-  const totalPoints = selectedPlayers.reduce(
-    (sum, player) => sum + player.points,
-    0
-  );
+  const totalPoints = selectedPlayers.reduce((sum, player) => sum + player.points, 0);
 
   const handleSaveTeam = async () => {
     if (selectedPlayers.length !== maxPlayers) {
@@ -94,13 +136,15 @@ const handleSelectPlayer = (player) => {
       return;
     }
 
-    // In a real app, we would save to a database here
     const team = {
+      userId: userId,
       teamName: teamName,
       players: selectedPlayerId,
       totalValue: totalPoints,
       price: initialBudget - budget,
     };
+    console.log(team);
+
     setShowSuccess(true);
     try {
       const res = await axios.post("http://localhost:3000/api/team", team);
@@ -111,12 +155,8 @@ const handleSelectPlayer = (player) => {
     }
   };
 
-  const playerCategories = [
-    "Batsman",
-    "Bowler",
-    "All-Rounder",
-    "Wicket-Keepers",
-  ];
+  const playerCategories = ["Batsman", "Bowler", "All-Rounder", "Wicket-Keepers"];
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
@@ -144,12 +184,8 @@ const handleSelectPlayer = (player) => {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-2xl">
-                  Build Your Dream Team
-                </CardTitle>
-                <CardDescription>
-                  Select 14 players within your budget of ₹9,000,000
-                </CardDescription>
+                <CardTitle className="text-2xl">Build Your Dream Team</CardTitle>
+                <CardDescription>Select 14 players within your budget of ₹9,000,000</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -157,7 +193,7 @@ const handleSelectPlayer = (player) => {
                     <div>
                       <p className="text-sm font-medium">Budget Remaining</p>
                       <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        ₹{budget.toLocaleString()}
+                        Rs. {budget.toLocaleString()}
                       </p>
                     </div>
                     <div>
@@ -168,10 +204,7 @@ const handleSelectPlayer = (player) => {
                     </div>
                   </div>
 
-                  <Progress
-                    value={((initialBudget - budget) / initialBudget) * 100}
-                    className="h-2 bg-green-200 dark:bg-green-800"
-                  />
+                  <Progress value={((initialBudget - budget) / initialBudget) * 100} className="h-2 bg-green-200 dark:bg-green-800" />
                 </div>
               </CardContent>
             </Card>
@@ -194,29 +227,10 @@ const handleSelectPlayer = (player) => {
                         <PlayerCard
                           key={player._id}
                           player={player}
-                          isSelected={selectedPlayers.some(
-                            (p) => p._id === player._id
-                          )}
-                          isDisabled={
-                            budget < player.value ||
-                            selectedPlayers.some((p) => p._id === player._id) ||
-                            selectedPlayers.length >= maxPlayers
-                          }
+                          isSelected={selectedPlayers.some((p) => p._id === player._id)}
+                          isDisabled={budget < player.value || selectedPlayers.some((p) => p._id === player._id) || selectedPlayers.length >= maxPlayers}
                           onSelect={() => handleSelectPlayer(player)}
                         />
-
-                        // <PlayerCard
-                        //   key={player._id}
-                        //   player={player}
-                        //   isSelected={selectedPlayers.some(
-                        //     (p) => p._id === player._id
-                        //   )}
-                        //   isDisabled={
-                        //     budget < player.value ||
-                        //     selectedPlayers.some((p) => p._id === player._id)
-                        //   }
-                        //   onSelect={() => handleSelectPlayer(player)}
-                        // />
                       ))}
                   </div>
                 </TabsContent>
@@ -232,6 +246,7 @@ const handleSelectPlayer = (player) => {
               totalPoints={totalPoints}
               onRemovePlayer={handleRemovePlayer}
               onSaveTeam={handleSaveTeam}
+              off = {teamMakeDisabled}
             />
           </div>
         </div>
