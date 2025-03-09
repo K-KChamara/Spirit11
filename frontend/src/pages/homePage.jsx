@@ -8,29 +8,23 @@ import { Toaster } from "sonner";
 import DashboardTabs from "@/components/dashboard-tabs";
 import FeatureShowcase from "@/components/feature-showcase";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { UserNav } from "@/components/user-nav";
-import { CreateTeamModal } from "@/components/create-team-modal";
 import { SiteFooter } from "../components/site-footer.jsx";
 import { HeroShowcase } from "../components/hero-showcase.jsx";
-import Chatbot from "../components/chat-bot.jsx";
-import { useUser } from "@clerk/clerk-react";
+// import Chatbot from "../components/chat-bot.jsx";
 import { useEffect } from "react";
+import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-
-
+import Chatbot from "@/components/chatbot.jsx";
 
 export default function Home() {
-  
   const [activeTab, setActiveTab] = useState("players");
   const { isSignedIn, user, isLoaded } = useUser();
   const navigate = useNavigate();
 
-
-    if (!isSignedIn) {
-      navigate("/sign-in");
-      return
-    }
-
+  if (!isSignedIn) {
+    navigate("/sign-in");
+    return;
+  }
 
   // If user data is still loading, we can show a loading state
 
@@ -43,10 +37,10 @@ export default function Home() {
     );
   }
 
-  return (
+  return isSignedIn ? (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-screen-xl mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <img
@@ -56,13 +50,9 @@ export default function Home() {
             />
             <h1 className="text-xl font-bold text-primary">Spirit11</h1>
           </div>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <CreateTeamModal />
-            <UserNav />
-          </div>
+          
         </div>
-      </header>
+      </header> */}
 
       {/* Hero Section */}
       <section className="w-full max-w-screen-xl mx-auto py-8 md:py-12 px-4 relative">
@@ -78,13 +68,13 @@ export default function Home() {
                   Our AI assistant helps you make the best choices.
                 </p>
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button size="lg" onClick={() => setActiveTab("players")}>
+                  <Button size="lg" onClick={() => navigate("/team-builder")}>
                     Get Started
                   </Button>
                   <Button
                     size="lg"
                     variant="outline"
-                    onClick={() => setActiveTab("leaderboard")}
+                    onClick={() => navigate("/leaderboard")}
                   >
                     View Leaderboard
                   </Button>
@@ -124,6 +114,7 @@ export default function Home() {
 
       {/* Sonner Toaster */}
       <Toaster position="top-right" richColors closeButton />
+      <Chatbot />
     </div>
-  );
+  ) : null;
 }

@@ -17,7 +17,9 @@ import { Plus, Search, Edit, Trash2, Filter, Download } from "lucide-react"
 import { AddPlayerForm } from "@/components/add-player-form"
 import { useEffect } from "react"
 import axios from "axios"
-
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+import { SiteFooter } from "@/components/site-footer"
 // Sample data
 // const players = [
 //   {
@@ -90,7 +92,16 @@ export default function PlayersPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("")
   const [universityFilter, setUniversityFilter] = useState("")
-  const [isAddPlayerOpen, setIsAddPlayerOpen] = useState(false)
+  const [isAddPlayerOpen, setIsAddPlayerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("players");
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return
+    }
   useEffect(() => {
     const getAllPlayers = async () => {
       const response =  await axios.get("http://localhost:3000/api/player")
@@ -209,7 +220,7 @@ export default function PlayersPage() {
                   <TableCell className="font-medium">{player.name}</TableCell>
                   <TableCell>{player.university}</TableCell>
                   <TableCell>{player.category}</TableCell>
-                  <TableCell className="text-right">{player.points}</TableCell>
+                  <TableCell className="text-right">{player.points.toFixed(2)}</TableCell>
                   <TableCell className="text-right">{player.value}</TableCell>
 
                   <TableCell className="text-right">
@@ -234,6 +245,7 @@ export default function PlayersPage() {
           </TableBody>
         </Table>
       </div>
+      <SiteFooter className="m-0 w-fit" />
     </div>
   )
 }

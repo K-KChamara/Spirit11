@@ -36,12 +36,12 @@ export function SiteFooter() {
   return (
     <footer className="w-full bg-background border-t border-gray-200 dark:border-gray-800">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 md:grid-cols-2">
           {/* Brand Column */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <img
-                src="/placeholder.svg?height=32&width=32"
+                src="/src/assets/logo-img.png?height=32&width=32"
                 alt="Spirit11 Logo"
                 className="h-8"
               />
@@ -83,63 +83,6 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium tracking-wider uppercase">
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  How to Play
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Upcoming Matches
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Leaderboard
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Player Stats
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  FAQ
-                </a>
-              </li>
-            </ul>
-          </div>
-
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium tracking-wider uppercase">
@@ -149,9 +92,9 @@ export function SiteFooter() {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-muted-foreground mt-0.5" />
                 <span className="text-sm text-muted-foreground">
-                  123 Cricket Lane, Sports City
+                  SpiritX, University of Moratuwa,
                   <br />
-                  New Delhi, 110001
+                  Katubedda
                 </span>
               </li>
               <li className="flex items-center space-x-3">

@@ -12,10 +12,13 @@ import { TeamSummary } from "@/components/team-summary";
 import axios from "axios";
 import { useEffect } from "react";
 import { FullScreenSuccess } from "@/components/team-success-alert";
-
+import { SiteFooter } from "@/components/site-footer";
 import { useState } from "react";
 import { BirdIcon as Cricket, Dice1 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+
 //  const players = [
 //     // Batsmen
 //     {
@@ -279,12 +282,20 @@ import { Link } from "react-router-dom";
 //   ]
 
 export default function TeamBuilder() {
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false);
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [selectedPlayerId, setSelectedPlayerId] = useState([]);
   const [teamName, setTeamName] = useState("My Cricket Team");
   const [budget, setBudget] = useState(9000000);
+  const [activeTab, setActiveTab] = useState("players");
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+  if (!isSignedIn) {
+    navigate("/sign-in");
+    return;
+  }
   const initialBudget = 9000000;
   const maxPlayers = 14;
   useEffect(() => {
@@ -295,10 +306,8 @@ export default function TeamBuilder() {
     getAllPlayers();
   }, []);
   const handleCloseSuccess = () => {
-    setShowSuccess(false)
-  }
-
-
+    setShowSuccess(false);
+  };
 
   const handleSelectPlayer = (player) => {
     if (selectedPlayers.length >= maxPlayers) {
@@ -344,11 +353,10 @@ export default function TeamBuilder() {
       totalValue: totalPoints,
       price: initialBudget - budget,
     };
-    setShowSuccess(true)
+    setShowSuccess(true);
     try {
-      const res = await axios.post('http://localhost:3000/api/team', team)
-      
-      
+      const res = await axios.post("http://localhost:3000/api/team", team);
+
       alert("Team saved successfully!");
     } catch (err) {
       console.log(err);
@@ -358,32 +366,12 @@ export default function TeamBuilder() {
   const playerCategories = [
     "Batsman",
     "Bowler",
-    "All-Rounder",
-    "Wicket-Keepers",
+    "All-Rounder"
   ];
 
-
   return (
-    
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
-      <header className="bg-green-700 text-white shadow-md">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Cricket className="h-8 w-8" />
-              <h1 className="text-2xl font-bold">Mora Spirit X</h1>
-            </div>
-            <nav className="flex gap-4">
-              <Link to="/team-builder" className="font-medium hover:underline">
-                Team Builder
-              </Link>
-              <Link to="/leaderboard" className="font-medium hover:underline">
-                Leaderboard
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen ">
+      
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-[1fr_350px]">
@@ -394,7 +382,7 @@ export default function TeamBuilder() {
                   Build Your Dream Team
                 </CardTitle>
                 <CardDescription>
-                  Select 14 players within your budget of ₹9,000,000
+                  Select 14 players within your budget of LKR 9,000,000
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -403,7 +391,7 @@ export default function TeamBuilder() {
                     <div>
                       <p className="text-sm font-medium">Budget Remaining</p>
                       <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        ₹{budget.toLocaleString()}
+                        LKR {budget.toLocaleString()}
                       </p>
                     </div>
                     <div>
@@ -423,7 +411,7 @@ export default function TeamBuilder() {
             </Card>
 
             <Tabs defaultValue={playerCategories[0]} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 {playerCategories.map((category) => (
                   <TabsTrigger key={category} value={category}>
                     {category}
@@ -468,6 +456,7 @@ export default function TeamBuilder() {
           </div>
         </div>
       </main>
+      <SiteFooter className="m-0 w-fit" />
     </div>
   );
 }

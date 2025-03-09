@@ -36,6 +36,9 @@ import {
 import { UpdateStatsForm } from "@/components/update-stats-form";
 import { useEffect } from "react";
 import axios from "axios";
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+import { SiteFooter } from "@/components/site-footer";
 // Sample data
 // const players = [
 //   {
@@ -113,6 +116,15 @@ export default function PlayerStatsPage() {
   const [sortDirection, setSortDirection] = useState("desc");
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [isUpdateStatsOpen, setIsUpdateStatsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("players");
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return
+    }
   useEffect(() => {
     const getAllPlayers = async () => {
       const response = await axios.get("http://localhost:3000/api/player");
@@ -315,6 +327,7 @@ export default function PlayerStatsPage() {
           </DialogContent>
         </Dialog>
       )}
+      <SiteFooter className="m-0 w-fit" />
     </div>
   );
 }

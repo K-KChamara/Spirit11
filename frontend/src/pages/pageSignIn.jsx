@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 
 export default function SignInPage() {
   const [stars, setStars] = useState([])
+  const [activeTab, setActiveTab] = useState("players");
+  
 
 //   useEffect(() => {
 //     // Generate stars once

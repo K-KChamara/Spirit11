@@ -5,7 +5,7 @@ import CricketNavigation from "@/components/cricket-navigation";
 const MainLayout = () => {
   return (
     <div>
-  
+      
       <CricketNavigation children={<Outlet/>} />
       
     

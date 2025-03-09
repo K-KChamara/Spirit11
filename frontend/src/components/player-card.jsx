@@ -49,11 +49,11 @@ export function PlayerCard({ player, isSelected, isDisabled, onSelect }) {
         <div className="mt-3 grid grid-cols-2 gap-2">
           <div>
             <p className="text-xs text-muted-foreground">Value</p>
-            <p className="font-semibold">₹{player.value.toLocaleString()}</p>
+            <p className="font-semibold">LKR {player.value.toLocaleString()}</p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Points</p>
-            <p className="font-semibold text-green-600 dark:text-green-400">{player.points}</p>
+            <p className="font-semibold text-green-600 dark:text-green-400">{player.points.toFixed(2)}</p>
           </div>
         </div>
       </CardContent>

@@ -8,7 +8,7 @@ import { Trophy, X } from "lucide-react"
 
 export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRemovePlayer, onSaveTeam }) {
   return (
-    <Card className="sticky top-4">
+    <Card className="sticky top-4 bg-green-200 ">
       <CardHeader className="pb-3">
         <div className="space-y-1">
           <CardTitle>Your Team</CardTitle>
@@ -25,7 +25,7 @@ export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRem
       <CardContent className="pb-2">
         <div className="flex items-center justify-between mb-2">
           <div className="text-sm text-muted-foreground">Total Points</div>
-          <div className="text-xl font-bold text-green-600 dark:text-green-400">{totalPoints}</div>
+          <div className="text-xl font-bold text-green-600 dark:text-green-400">{totalPoints.toFixed(2)}</div>
         </div>
 
         <Separator className="my-2" />
@@ -42,7 +42,7 @@ export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRem
                     <div className="text-xs text-muted-foreground">{player.category}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="text-sm font-medium text-green-600 dark:text-green-400">{player.points}</div>
+                    <div className="text-sm font-medium text-green-600 dark:text-green-400">{player.points.toFixed(2)}</div>
                     <Button
                       variant="ghost"
                       size="icon"

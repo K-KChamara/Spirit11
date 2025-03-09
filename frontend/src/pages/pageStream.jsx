@@ -5,8 +5,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { CalendarDays, Trophy, Users } from "lucide-react"
 import YouTubeLive from "@/components/youtube-live"
-
+import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
+import { SiteFooter } from "@/components/site-footer"
 export default function LiveStreamPage() {
+  const [activeTab, setActiveTab] = useState("players");
+  const { isSignedIn, user, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+
+    if (!isSignedIn) {
+      navigate("/sign-in");
+      return
+    }
   const [currentMatch, setCurrentMatch] = useState({
     id: "live-match-1",
     videoId: "jfKfPfyJRdk", // Example YouTube Live video ID
@@ -182,7 +193,9 @@ export default function LiveStreamPage() {
             </TabsContent>
           </Tabs>
         </div>
+      
       </div>
+      <SiteFooter className="m-0 w-fit" />
     </div>
   )
 }
