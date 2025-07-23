@@ -18,10 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import Navbar from "./NavBar";
-<<<<<<< HEAD
 import logo from "../assets/logo.png";
-=======
->>>>>>> 33477e31018013be3cf4597b93e2584f7f6273db
 
 const navigationItems = [
   { name: "Dashboard", path: "/", icon: Home },

@@ -50,18 +50,17 @@ export default function PlayerStatsPage() {
   const [isUpdateStatsOpen, setIsUpdateStatsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("players");
   const [trigger , setTrigger] = useState(false);
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { isSignedIn, user } = useUser();
   const navigate = useNavigate();
 
 
-    if (!isSignedIn) {
-      navigate("/sign-in");
-      return
-    }
-    if(user.publicMetadata.role !== "admin") {
-      navigate("/home");
-      return
-    }
+  useEffect(() => {
+  if (!isSignedIn) {
+    navigate("/sign-in");
+  } else if (user?.publicMetadata?.role !== "admin") {
+    navigate("/home");
+  }
+}, [isSignedIn, user, navigate]);
 
 
   useEffect(() => {
