@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 import Navbar from "./NavBar";
+import logo from "../assets/logo.png";
 
 const navigationItems = [
   { name: "Dashboard", path: "/", icon: Home },
@@ -109,8 +110,9 @@ export default function CricketNavigation({ children }) {
                 </SignedIn>
               </SheetContent>
             </Sheet>
-            <div className="ml-50 font-bold text-3xl text-emerald-700">
-              Spirit 11
+            <img src={logo} alt="VirtualInnings Logo" width={70} className="ml-40"/>           
+            <div className="ml-5 font-bold font-serif text-3xl text-emerald-700">
+              Virtual Innings
             </div>
           </div>
           <div className="flex flex-row gap-2">

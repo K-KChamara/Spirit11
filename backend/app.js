@@ -4,7 +4,6 @@ import cors from 'cors'; // Importing CORS
 import dbConnect from './DataBase/db.js';
 import dotenv from 'dotenv';
 import PlayerRouter from './Routes/playerRoutes.js';
-import { teamRouter } from './Routes/teamRoutes.js';
 import ChatBotRouter from './Routes/chatBotRoutes.js';
 import teamRouter from './Routes/teamRoutes.js';
 import tournamentRouter from './Routes/tournamentController.js';

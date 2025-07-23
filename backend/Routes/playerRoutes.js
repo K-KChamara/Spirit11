@@ -1,6 +1,6 @@
 import express from "express";
 import { createPlayer  ,addPlayers , getAllPlayers, getTopBowlers, getTopBatsmen, getTopAllRounders} from "../Controllers/playerController.js";
-import { createPlayer  ,addPlayers , getAllPlayers ,getPlayerById , deletePlayer , updatePlayer} from "../Controllers/playerController.js";
+import {getPlayerById , deletePlayer , updatePlayer} from "../Controllers/playerController.js";
 import { Router } from "express";
 
 const PlayerRouter = express.Router();

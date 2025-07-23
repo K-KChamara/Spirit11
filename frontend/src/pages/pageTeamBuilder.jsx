@@ -176,7 +176,7 @@ export default function TeamBuilder() {
                   Build Your Dream Team
                 </CardTitle>
                 <CardDescription>
-                  Select 14 players within your budget of ₹9,000,000
+                  Select 14 players within your budget of LKR 9,000,000
                 </CardDescription>
               </CardHeader>
               <CardContent>

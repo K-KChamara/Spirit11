@@ -66,7 +66,7 @@ export function HeroShowcase() {
 
     const fetchTeams = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/team");
+        const response = await axios.get("http://localhost:3000/api/teams");
         const teams = response.data;
         console.log("team1", teams[0]);
         // Categorize Teams
