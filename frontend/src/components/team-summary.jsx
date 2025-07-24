@@ -28,17 +28,14 @@ export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRem
           <div className="text-sm text-muted-foreground">Total Points</div>
           <div className="text-xl font-bold text-green-600 dark:text-green-400">{totalPoints.toFixed(2)}</div>
         </div>
-        {off ? (
+        {/* {off ? (
           <div className="text-center text-lg font-bold text-muted-foreground">
             You already created a team
           </div>
-        ) : (
+        ) : */}
+         
           <>
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm text-muted-foreground">Total Points</div>
-              <div className="text-xl font-bold text-green-600 dark:text-green-400">{totalPoints}</div>
-            </div>
-
+          
             <Separator className="my-2" />
 
             <div className="text-sm font-medium mb-1">Selected Players ({players.length})</div>
@@ -47,13 +44,13 @@ export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRem
               {players.length > 0 ? (
                 <div className="space-y-2">
                   {players.map((player) => (
-                    <div key={player._id} className="flex items-center justify-between rounded-lg border p-2">
+                    <div key={player._id} className="flex items-center justify-between rounded-lg border p-2 bg-white">
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{player.name}</div>
                         <div className="text-xs text-muted-foreground">{player.category}</div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="text-sm font-medium text-green-600 dark:text-green-400">{player.points}</div>
+                        <div className="text-sm font-medium text-green-600 dark:text-green-400">{player.points.toFixed(2)}</div>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -75,7 +72,7 @@ export function TeamSummary({ teamName, setTeamName, players, totalPoints, onRem
               )}
             </ScrollArea>
           </>
-        )}
+        
       </CardContent>
       <CardFooter>
         {!off && (

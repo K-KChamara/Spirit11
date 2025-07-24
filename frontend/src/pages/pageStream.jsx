@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState , useEffect} from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,43 +14,45 @@ export default function LiveStreamPage() {
   const navigate = useNavigate();
 
 
-    if (!isSignedIn) {
+     useEffect(() => {
+    if (isLoaded && !isSignedIn) {
       navigate("/sign-in");
-      return
     }
+  }, [isSignedIn, isLoaded, navigate]);
   const [currentMatch, setCurrentMatch] = useState({
     id: "live-match-1",
     videoId: "jfKfPfyJRdk", // Example YouTube Live video ID
-    title: "India vs Australia - 3rd ODI",
+    title: "University of Moratuwa  vs University of Peradeniya - 1st ODI",
     status: "LIVE",
     teams: {
-      team1: { name: "India", score: "245/6", overs: "42.3" },
-      team2: { name: "Australia", score: "0/0", overs: "0.0" },
+      team1: { name: "University of Moratuwa", score: "245/6", overs: "42.3" },
+      team2: { name: "University of Peradeniya", score: "0/0", overs: "0.0" },
     },
-    venue: "Melbourne Cricket Ground",
-    tournament: "Cricket World Cup 2023",
+    venue: "Moratuwa University Cricket Ground",
+    tournament: "Freshers 2025",
   })
 
   const upcomingMatches = [
-    {
-      id: "upcoming-1",
-      title: "England vs New Zealand",
-      date: "Tomorrow, 14:30 IST",
-      venue: "Lord's Cricket Ground",
-    },
-    {
-      id: "upcoming-2",
-      title: "South Africa vs Pakistan",
-      date: "23 Mar, 10:00 IST",
-      venue: "Johannesburg",
-    },
-    {
-      id: "upcoming-3",
-      title: "West Indies vs Sri Lanka",
-      date: "25 Mar, 19:00 IST",
-      venue: "Bridgetown",
-    },
-  ]
+  {
+    id: "contest-1",
+    title: "UoM vs UoC - Inter-University Coding Battle",
+    date: "Tomorrow, 09:00 AM IST",
+    venue: "University of Moratuwa",
+  },
+  {
+    id: "contest-2",
+    title: "UoP vs SLIIT - AI Challenge Showdown",
+    date: "26 Jul, 10:00 AM IST",
+    venue: "University of Peradeniya",
+  },
+  {
+    id: "contest-3",
+    title: "NSBM vs UoJ - Hackathon Finals",
+    date: "30 Jul, 01:00 PM IST",
+    venue: "NSBM Green University",
+  },
+]
+
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -150,7 +150,7 @@ export default function TeamBuilder() {
 
     setShowSuccess(true);
     try {
-      const res = await axios.post("http://localhost:3000/api/team", team);
+      const res = await axios.post("http://localhost:3000/api/teams", team);
 
       alert("Team saved successfully!");
     } catch (err) {
@@ -166,7 +166,7 @@ export default function TeamBuilder() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 dark:from-green-950 dark:to-green-900">
+    <div className="min-h-screen ">
       <main className="container mx-auto px-4 py-8">
         <div className="grid gap-8 md:grid-cols-[1fr_350px]">
           <div className="space-y-6">
@@ -185,7 +185,7 @@ export default function TeamBuilder() {
                     <div>
                       <p className="text-sm font-medium">Budget Remaining</p>
                       <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        Rs. {budget.toLocaleString()}
+                        LKR {budget.toLocaleString()}
                       </p>
                     </div>
                     <div>

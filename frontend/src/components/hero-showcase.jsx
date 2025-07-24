@@ -68,7 +68,6 @@ export function HeroShowcase() {
       try {
         const response = await axios.get("http://localhost:3000/api/teams");
         const teams = response.data;
-        console.log("team1", teams[0]);
         // Categorize Teams
         console.log("teams", teams);
         const topTeams = [...teams] // Create a copy to avoid mutating the original array
@@ -83,7 +82,19 @@ export function HeroShowcase() {
     };
     fetchTeams();
   }, []);
-
+  function getInitials(name) {
+  if (!name) return "";
+  // Trim and split name by space (if full name)
+  const parts = name.trim().split(" ");
+  
+  // If single word, take first two letters
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  
+  // If multiple words, take first letter of first two words
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
   return (
     <section className="py-10">
       <div className="text-center mb-8">
@@ -276,9 +287,9 @@ export function HeroShowcase() {
                   <Avatar className="h-16 w-16 border-2 border-blue-200 dark:border-blue-800">
                     <AvatarImage
                       src="/placeholder.svg?height=64&width=64"
-                      alt="Virat Kohli"
+                      alt="Player Name"
                     />
-                    <AvatarFallback>DJ</AvatarFallback>
+                    <AvatarFallback> {getInitials(topAllRounders[0]?.name)}</AvatarFallback>
                   </Avatar>
                   <div className="text-right">
                     <div className="text-2xl font-bold">

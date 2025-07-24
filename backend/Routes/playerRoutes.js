@@ -16,3 +16,8 @@ PlayerRouter.get("/topAllRounders", getTopAllRounders);
 PlayerRouter.route("/:id").get(getPlayerById).delete(deletePlayer).put(updatePlayer);
 
 export default PlayerRouter;
+
+
+
+
+

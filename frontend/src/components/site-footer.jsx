@@ -13,7 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
-
+import logo from "../assets/logo-footer.png"
 export function SiteFooter() {
   const [email, setEmail] = useState("");
 
@@ -45,7 +45,8 @@ export function SiteFooter() {
                 alt="Spirit11 Logo"
                 className="h-8"
               />
-              <h2 className="text-xl font-bold text-primary">Spirit11</h2>
+              <img src={logo} alt="Spirit11 Logo" width={150} className="mb-2"/>       
+              {/* <h2 className="text-xl font-bold text-primary">Spirit11</h2> */}
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               The ultimate fantasy cricket platform where you can build your

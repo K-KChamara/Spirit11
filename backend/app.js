@@ -10,6 +10,7 @@ import tournamentRouter from './Routes/tournamentController.js';
 const app = express();
 // Load environment variables
 dotenv.config();
+
 const port = process.env.PORT || 3000;
 
 // Use CORS middleware to enable cross-origin requests
@@ -30,7 +31,7 @@ app.post('/api/data', (req, res) => {
   res.status(201).json({ message: 'Data received', data });
 });
 app.use('/api/player', PlayerRouter);
-app.use('/api/team' ,teamRouter)
+app.use('/api/teams' ,teamRouter)
 app.use('/api/chatBot',ChatBotRouter);
 app.use('/api/tournament' , tournamentRouter)
 // Add more routes as needed

@@ -67,7 +67,7 @@ export default function CricketNavigation({ children }) {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 z-50">
       <header className="sticky top-0 z-10 bg-white border-b shadow-sm">
-        <div className="mx-auto px-2 sm:px-3 flex justify-between items-center h-14">
+        <div className="mx-auto px-2 sm:px-3 flex justify-between items-center h-20">
           <div className="flex items-center gap-3">
             <Sheet>
               <SheetTrigger asChild className="lg:hidden">
@@ -110,10 +110,10 @@ export default function CricketNavigation({ children }) {
                 </SignedIn>
               </SheetContent>
             </Sheet>
-            <img src={logo} alt="VirtualInnings Logo" width={70} className="ml-40"/>           
-            <div className="ml-5 font-bold font-serif text-3xl text-emerald-700">
+            <img src={logo} alt="VirtualInnings Logo" width={200} className="ml-40"/>           
+            {/* <div className="ml-5 font-bold font-serif text-3xl text-emerald-700">
               Virtual Innings
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-row gap-2">
             <SignedIn>
