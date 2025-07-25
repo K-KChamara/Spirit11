@@ -1,3 +1,5 @@
+import ReactMarkdown from "react-markdown";
+
 export default function ChatMessage({ message }) {
   const isUser = message.sender === "You";
 
@@ -35,13 +37,16 @@ export default function ChatMessage({ message }) {
         </div>
       )}
 
-      <div
+      {/* <div
         className={`rounded-lg px-3 py-2 max-w-[85%] text-sm ${
           isUser ? "bg-primary text-primary-foreground" : "bg-muted"
         }`}
       >
         {message.text}
-      </div>
+      </div> */}
+     <div className="prose prose-sm dark:prose-invert max-w-[80%] whitespace-pre-wrap break-words">
+  <ReactMarkdown>{message.text}</ReactMarkdown>
+</div>
 
       {isUser && (
         <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md bg-primary">
